@@ -1,10 +1,9 @@
 package v1
 
 import (
-	"github.com/AlexeyTarasov77/messanger.chats/internal/controller/http/v1/response"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 )
 
-func errorResponse(ctx *fiber.Ctx, code int, msg string) error {
-	return ctx.Status(code).JSON(response.Error{Error: msg})
+func errorResponse(c *gin.Context, code int, msg string) {
+	c.JSON(code, map[string]string{"error": msg})
 }

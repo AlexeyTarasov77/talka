@@ -8,17 +8,12 @@ import (
 	"syscall"
 
 	"github.com/AlexeyTarasov77/messanger.chats/config"
-	amqprpc "github.com/AlexeyTarasov77/messanger.chats/internal/controller/amqp_rpc"
-	"github.com/AlexeyTarasov77/messanger.chats/internal/controller/grpc"
 	"github.com/AlexeyTarasov77/messanger.chats/internal/controller/http"
-	"github.com/AlexeyTarasov77/messanger.chats/internal/repo/persistent"
-	"github.com/AlexeyTarasov77/messanger.chats/internal/repo/webapi"
-	"github.com/AlexeyTarasov77/messanger.chats/internal/usecase/translation"
-	"github.com/AlexeyTarasov77/messanger.chats/pkg/grpcserver"
+	repo "github.com/AlexeyTarasov77/messanger.chats/internal/gateways/storage/postgres"
+	"github.com/AlexeyTarasov77/messanger.chats/internal/usecase/chats"
 	"github.com/AlexeyTarasov77/messanger.chats/pkg/httpserver"
 	"github.com/AlexeyTarasov77/messanger.chats/pkg/logger"
 	"github.com/AlexeyTarasov77/messanger.chats/pkg/postgres"
-	"github.com/AlexeyTarasov77/messanger.chats/pkg/rabbitmq/rmq_rpc/server"
 )
 
 // Run creates objects via constructors.
@@ -32,31 +27,16 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
+	repositories := repo.NewRepositorories(pg)
+
 	// Use-Case
-	translationUseCase := translation.New(
-		persistent.New(pg),
-		webapi.New(),
-	)
-
-	// RabbitMQ RPC Server
-	rmqRouter := amqprpc.NewRouter(translationUseCase, l)
-
-	rmqServer, err := server.New(cfg.RMQ.URL, cfg.RMQ.ServerExchange, rmqRouter, l)
-	if err != nil {
-		l.Fatal(fmt.Errorf("app - Run - rmqServer - server.New: %w", err))
-	}
-
-	// gRPC Server
-	grpcServer := grpcserver.New(grpcserver.Port(cfg.GRPC.Port))
-	grpc.NewRouter(grpcServer.App, translationUseCase, l)
+	chatsUseCase := chats.New(repositories.Chats)
 
 	// HTTP Server
 	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
-	http.NewRouter(httpServer.App, cfg, translationUseCase, l)
+	http.NewRouter(httpServer.App, cfg, chatsUseCase, l)
 
 	// Start servers
-	rmqServer.Start()
-	grpcServer.Start()
 	httpServer.Start()
 
 	// Waiting signal
@@ -68,25 +48,11 @@ func Run(cfg *config.Config) {
 		l.Info("app - Run - signal: %s", s.String())
 	case err = <-httpServer.Notify():
 		l.Error(fmt.Errorf("app - Run - httpServer.Notify: %w", err))
-	case err = <-grpcServer.Notify():
-		l.Error(fmt.Errorf("app - Run - grpcServer.Notify: %w", err))
-	case err = <-rmqServer.Notify():
-		l.Error(fmt.Errorf("app - Run - rmqServer.Notify: %w", err))
 	}
 
 	// Shutdown
 	err = httpServer.Shutdown()
 	if err != nil {
 		l.Error(fmt.Errorf("app - Run - httpServer.Shutdown: %w", err))
-	}
-
-	err = grpcServer.Shutdown()
-	if err != nil {
-		l.Error(fmt.Errorf("app - Run - grpcServer.Shutdown: %w", err))
-	}
-
-	err = rmqServer.Shutdown()
-	if err != nil {
-		l.Error(fmt.Errorf("app - Run - rmqServer.Shutdown: %w", err))
 	}
 }

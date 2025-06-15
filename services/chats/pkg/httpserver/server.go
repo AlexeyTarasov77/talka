@@ -2,10 +2,11 @@
 package httpserver
 
 import (
+	"context"
+	"net/http"
 	"time"
 
-	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -17,7 +18,8 @@ const (
 
 // Server -.
 type Server struct {
-	App    *fiber.App
+	App    *gin.Engine
+	server *http.Server
 	notify chan error
 
 	address         string
@@ -43,15 +45,14 @@ func New(opts ...Option) *Server {
 		opt(s)
 	}
 
-	app := fiber.New(fiber.Config{
-		Prefork:      s.prefork,
+	s.App = gin.Default()
+
+	s.server = &http.Server{
+		Addr:         s.address,
 		ReadTimeout:  s.readTimeout,
 		WriteTimeout: s.writeTimeout,
-		JSONDecoder:  json.Unmarshal,
-		JSONEncoder:  json.Marshal,
-	})
-
-	s.App = app
+		Handler:      s.App.Handler(),
+	}
 
 	return s
 }
@@ -59,7 +60,8 @@ func New(opts ...Option) *Server {
 // Start -.
 func (s *Server) Start() {
 	go func() {
-		s.notify <- s.App.Listen(s.address)
+		s.notify <- s.App.Run(s.address)
+		s.notify <- s.server.ListenAndServe()
 		close(s.notify)
 	}()
 }
@@ -71,5 +73,6 @@ func (s *Server) Notify() <-chan error {
 
 // Shutdown -.
 func (s *Server) Shutdown() error {
-	return s.App.ShutdownWithTimeout(s.shutdownTimeout)
+	ctx, _ := context.WithTimeout(context.Background(), s.shutdownTimeout)
+	return s.server.Shutdown(ctx)
 }

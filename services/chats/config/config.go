@@ -2,8 +2,16 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
 
-	"github.com/caarlos0/env/v11"
+	"github.com/ilyakaznacheev/cleanenv"
+)
+
+var (
+	_, filename, _, _ = runtime.Caller(0)
+	Root              = filepath.Join(filepath.Dir(filename), "../..")
 )
 
 type (
@@ -65,12 +73,28 @@ type (
 	}
 )
 
-// NewConfig returns app config.
-func NewConfig() (*Config, error) {
-	cfg := &Config{}
-	if err := env.Parse(cfg); err != nil {
-		return nil, fmt.Errorf("config error: %w", err)
+// MustLoad returns app config.
+func MustLoad() *Config {
+	configPath := resolveConfigPath()
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		panic("config on path " + configPath + " does not exist")
 	}
+	var cfg Config
+	err := cleanenv.ReadConfig(configPath, &cfg)
+	if err != nil {
+		panic(err)
+	}
+	return &cfg
+}
 
-	return cfg, nil
+func resolveConfigPath() string {
+	mode := os.Getenv("MODE")
+	if mode == "" {
+		mode = "local"
+	}
+	currDir, err := os.Getwd()
+	if err != nil {
+		panic(fmt.Sprintf("Failed to build config path. Error: %s", err))
+	}
+	return filepath.Join(currDir, ".env."+mode)
 }
