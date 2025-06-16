@@ -1,12 +1,18 @@
 // Package gateways implements application outer layer logic. Each logic group in own file.
 package gateways
 
-import "context"
+import (
+	"context"
+
+	"github.com/AlexeyTarasov77/messanger.chats/internal/entity"
+)
 
 //go:generate mockgen -source=contracts.go -destination=../usecase/mocks_gateways_test.go -package=usecase_test
 
 type (
-	ChatsRepo   interface{}
+	ChatsRepo interface {
+		GetAll(ctx context.Context) ([]entity.Chat, error)
+	}
 	Transaction interface {
 		Commit(ctx context.Context) error
 		Rollback(ctx context.Context) error

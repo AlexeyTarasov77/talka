@@ -5,8 +5,10 @@ import "time"
 type ChatType string
 
 var (
-	PrivateChatType ChatType = "private-chat"
-	GroupChatType   ChatType = "group-chat"
+	PersonalChatType ChatType = "private-chat"
+	GroupChatType    ChatType = "group-chat"
+
+	ChatTypes = []ChatType{PersonalChatType, GroupChatType}
 )
 
 type (
@@ -15,22 +17,26 @@ type (
 		GetTyp() ChatType
 		GetCreatedAt() time.Time
 		GetImageURL() string
+		GetLastMsgText() string
+		GetLastMsgDate() time.Time
 	}
-	chatImpl struct {
-		ID        int
-		Typ       ChatType
-		CreatedAt time.Time `json:"created_at"`
-		ImageURL  string    `json:"image_url"`
+	BaseChat struct {
+		ID          int
+		Typ         ChatType
+		CreatedAt   time.Time `json:"created_at"`
+		ImageURL    string    `json:"image_url"`
+		LastMsgText string    `json:"last_msg_text"`
+		LastMsgDate time.Time `json:"last_msg_date"`
 	}
 
 	PersonalChat struct {
-		chatImpl
+		BaseChat
 		FromUserId int
 		ToUserId   int
 	}
 
 	GroupChat struct {
-		chatImpl
+		BaseChat
 		OwnerId     int
 		Name        string
 		Description string // OPTIONAL
@@ -44,3 +50,26 @@ type (
 		IsPublic bool
 	}
 )
+
+func (c *BaseChat) GetID() int {
+	return c.ID
+}
+
+func (c *BaseChat) GetTyp() ChatType {
+	return c.Typ
+}
+
+func (c *BaseChat) GetCreatedAt() time.Time {
+	return c.CreatedAt
+}
+
+func (c *BaseChat) GetImageURL() string {
+	return c.ImageURL
+}
+
+func (c *BaseChat) GetLastMsgText() string {
+	return c.LastMsgText
+}
+func (c *BaseChat) GetLastMsgDate() time.Time {
+	return c.LastMsgDate
+}
