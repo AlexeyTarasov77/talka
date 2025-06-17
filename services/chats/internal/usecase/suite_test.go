@@ -16,6 +16,7 @@ type useCaseTestSuite struct {
 	chatsUseCase  *chats.UseCase
 	mockChatsRepo *MockChatsRepo
 	mockTxManager *MockTransactionsManager
+	mockUsersApi  *MockUsersAPI
 	ctrl          *gomock.Controller
 }
 
@@ -23,11 +24,13 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	ctrl := gomock.NewController(t)
 	mockTxManager := NewMockTransactionsManager(ctrl)
 	mockChatsRepo := NewMockChatsRepo(ctrl)
-	chatsUseCase := chats.New(mockChatsRepo, mockTxManager)
+	mockUsersApi := NewMockUsersAPI(ctrl)
+	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersApi)
 	return &useCaseTestSuite{
 		chatsUseCase:  chatsUseCase,
 		mockChatsRepo: mockChatsRepo,
 		mockTxManager: mockTxManager,
+		mockUsersApi:  mockUsersApi,
 		ctrl:          ctrl,
 	}
 }

@@ -57,6 +57,21 @@ func (mr *MockChatsRepoMockRecorder) GetAll(ctx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockChatsRepo)(nil).GetAll), ctx)
 }
 
+// Save mocks base method.
+func (m *MockChatsRepo) Save(ctx context.Context, chat entity.Chat) (entity.Chat, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", ctx, chat)
+	ret0, _ := ret[0].(entity.Chat)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockChatsRepoMockRecorder) Save(ctx, chat any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockChatsRepo)(nil).Save), ctx, chat)
+}
+
 // MockTransaction is a mock of Transaction interface.
 type MockTransaction struct {
 	ctrl     *gomock.Controller
@@ -146,4 +161,43 @@ func (m *MockTransactionsManager) StartTransaction(ctx context.Context) (gateway
 func (mr *MockTransactionsManagerMockRecorder) StartTransaction(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartTransaction", reflect.TypeOf((*MockTransactionsManager)(nil).StartTransaction), ctx)
+}
+
+// MockUsersAPI is a mock of UsersAPI interface.
+type MockUsersAPI struct {
+	ctrl     *gomock.Controller
+	recorder *MockUsersAPIMockRecorder
+	isgomock struct{}
+}
+
+// MockUsersAPIMockRecorder is the mock recorder for MockUsersAPI.
+type MockUsersAPIMockRecorder struct {
+	mock *MockUsersAPI
+}
+
+// NewMockUsersAPI creates a new mock instance.
+func NewMockUsersAPI(ctrl *gomock.Controller) *MockUsersAPI {
+	mock := &MockUsersAPI{ctrl: ctrl}
+	mock.recorder = &MockUsersAPIMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUsersAPI) EXPECT() *MockUsersAPIMockRecorder {
+	return m.recorder
+}
+
+// CheckExists mocks base method.
+func (m *MockUsersAPI) CheckExists(ctx context.Context, id int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckExists", ctx, id)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckExists indicates an expected call of CheckExists.
+func (mr *MockUsersAPIMockRecorder) CheckExists(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExists", reflect.TypeOf((*MockUsersAPI)(nil).CheckExists), ctx, id)
 }

@@ -30,13 +30,13 @@ type (
 	}
 
 	PersonalChat struct {
-		BaseChat
+		Chat
 		FromUserId int
 		ToUserId   int
 	}
 
 	GroupChat struct {
-		BaseChat
+		Chat
 		OwnerId     int
 		Name        string
 		Description string // OPTIONAL

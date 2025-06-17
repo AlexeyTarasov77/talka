@@ -12,6 +12,7 @@ import (
 type (
 	ChatsRepo interface {
 		GetAll(ctx context.Context) ([]entity.Chat, error)
+		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
 	}
 	Transaction interface {
 		Commit(ctx context.Context) error
@@ -19,5 +20,8 @@ type (
 	}
 	TransactionsManager interface {
 		StartTransaction(ctx context.Context) (Transaction, error)
+	}
+	UsersAPI interface {
+		CheckExists(ctx context.Context, id int) (bool, error)
 	}
 )

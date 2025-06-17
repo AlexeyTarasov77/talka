@@ -22,6 +22,6 @@ type (
 	Chats interface {
 		ListChats(ctx context.Context) ([]entity.Chat, error)
 		CreatePersonalChat(ctx context.Context, dto dto.CreatePersonalChat) (*entity.PersonalChat, error)
-		CreateGroupChat(ctx context.Context, dto dto.CreateGroupChat) (*entity.PersonalChat, error)
+		CreateGroupChat(ctx context.Context, dto dto.CreateGroupChat) (*entity.GroupChat, error)
 	}
 )
