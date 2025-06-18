@@ -12,17 +12,19 @@ import (
 
 // UseCase -.
 type UseCase struct {
-	chatsRepo gateways.ChatsRepo
-	txManager gateways.TransactionsManager
-	usersApi  gateways.UsersAPI
+	chatsRepo     gateways.ChatsRepo
+	txManager     gateways.TransactionsManager
+	usersRepo     gateways.UsersRepo
+	slugGenerator gateways.SlugGenerator
 }
 
 // New -.
-func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersApi gateways.UsersAPI) *UseCase {
+func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersRepo gateways.UsersRepo, slugGenerator gateways.SlugGenerator) *UseCase {
 	return &UseCase{
-		chatsRepo: chatsRepo,
-		txManager: txManager,
-		usersApi:  usersApi,
+		chatsRepo:     chatsRepo,
+		txManager:     txManager,
+		usersRepo:     usersRepo,
+		slugGenerator: slugGenerator,
 	}
 }
 
@@ -34,15 +36,15 @@ func (uc *UseCase) ListChats(ctx context.Context) ([]entity.Chat, error) {
 	return chats, nil
 }
 
-func (uc *UseCase) CreatePersonalChat(ctx context.Context, data *dto.CreatePersonalChat) (*entity.PersonalChat, error) {
-	isExists, err := uc.usersApi.CheckExists(ctx, data.WithUserId)
+func (uc *UseCase) CreatePersonalChat(ctx context.Context, payload *dto.CreatePersonalChat) (*entity.PersonalChat, error) {
+	isExists, err := uc.usersRepo.CheckExistsByIds(ctx, []int{payload.WithUserId})
 	if err != nil {
 		return nil, err
 	}
 	if !isExists {
 		return nil, ErrUserNotFound
 	}
-	chat, err := uc.chatsRepo.Save(ctx, &entity.PersonalChat{FromUserId: data.CurrentUserId, ToUserId: data.WithUserId})
+	chat, err := uc.chatsRepo.Save(ctx, &entity.PersonalChat{FromUserId: payload.CurrentUserId, ToUserId: payload.WithUserId})
 	if err != nil {
 		if errors.Is(err, storage.ErrAlreadyExists) {
 			return nil, ErrChatAlreadyExists
@@ -55,4 +57,30 @@ func (uc *UseCase) CreatePersonalChat(ctx context.Context, data *dto.CreatePerso
 	return chat.(*entity.PersonalChat), err
 }
 
-// func (uc *UseCase) CreateGroupChat(ctx context.Context, dto dto.CreateGroupChat) (*entity.PersonalChat, error)
+func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroupChat) (*entity.GroupChat, error) {
+	if payload.MembersIds != nil && len(payload.MembersIds) > 0 {
+		isExists, err := uc.usersRepo.CheckExistsByIds(ctx, payload.MembersIds)
+		if err != nil {
+			return nil, err
+		}
+		if !isExists {
+			return nil, ErrMemberNotFound
+		}
+	}
+	ent := payload.MapToEntity()
+	if ent.Slug == "" {
+		generatedSlug, err := uc.slugGenerator.GenerateRandomSlug()
+		if err != nil {
+			return nil, err
+		}
+		ent.Slug = generatedSlug
+	}
+	chat, err := uc.chatsRepo.Save(ctx, ent)
+	if err != nil {
+		if errors.Is(err, storage.ErrAlreadyExists) {
+			return nil, ErrChatAlreadyExists
+		}
+		return nil, err
+	}
+	return chat.(*entity.GroupChat), nil
+}

@@ -72,6 +72,45 @@ func (mr *MockChatsRepoMockRecorder) Save(ctx, chat any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockChatsRepo)(nil).Save), ctx, chat)
 }
 
+// MockUsersRepo is a mock of UsersRepo interface.
+type MockUsersRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockUsersRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockUsersRepoMockRecorder is the mock recorder for MockUsersRepo.
+type MockUsersRepoMockRecorder struct {
+	mock *MockUsersRepo
+}
+
+// NewMockUsersRepo creates a new mock instance.
+func NewMockUsersRepo(ctrl *gomock.Controller) *MockUsersRepo {
+	mock := &MockUsersRepo{ctrl: ctrl}
+	mock.recorder = &MockUsersRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUsersRepo) EXPECT() *MockUsersRepoMockRecorder {
+	return m.recorder
+}
+
+// CheckExistsByIds mocks base method.
+func (m *MockUsersRepo) CheckExistsByIds(ctx context.Context, ids []int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckExistsByIds", ctx, ids)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckExistsByIds indicates an expected call of CheckExistsByIds.
+func (mr *MockUsersRepoMockRecorder) CheckExistsByIds(ctx, ids any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByIds", reflect.TypeOf((*MockUsersRepo)(nil).CheckExistsByIds), ctx, ids)
+}
+
 // MockTransaction is a mock of Transaction interface.
 type MockTransaction struct {
 	ctrl     *gomock.Controller
@@ -163,41 +202,41 @@ func (mr *MockTransactionsManagerMockRecorder) StartTransaction(ctx any) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartTransaction", reflect.TypeOf((*MockTransactionsManager)(nil).StartTransaction), ctx)
 }
 
-// MockUsersAPI is a mock of UsersAPI interface.
-type MockUsersAPI struct {
+// MockSlugGenerator is a mock of SlugGenerator interface.
+type MockSlugGenerator struct {
 	ctrl     *gomock.Controller
-	recorder *MockUsersAPIMockRecorder
+	recorder *MockSlugGeneratorMockRecorder
 	isgomock struct{}
 }
 
-// MockUsersAPIMockRecorder is the mock recorder for MockUsersAPI.
-type MockUsersAPIMockRecorder struct {
-	mock *MockUsersAPI
+// MockSlugGeneratorMockRecorder is the mock recorder for MockSlugGenerator.
+type MockSlugGeneratorMockRecorder struct {
+	mock *MockSlugGenerator
 }
 
-// NewMockUsersAPI creates a new mock instance.
-func NewMockUsersAPI(ctrl *gomock.Controller) *MockUsersAPI {
-	mock := &MockUsersAPI{ctrl: ctrl}
-	mock.recorder = &MockUsersAPIMockRecorder{mock}
+// NewMockSlugGenerator creates a new mock instance.
+func NewMockSlugGenerator(ctrl *gomock.Controller) *MockSlugGenerator {
+	mock := &MockSlugGenerator{ctrl: ctrl}
+	mock.recorder = &MockSlugGeneratorMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUsersAPI) EXPECT() *MockUsersAPIMockRecorder {
+func (m *MockSlugGenerator) EXPECT() *MockSlugGeneratorMockRecorder {
 	return m.recorder
 }
 
-// CheckExists mocks base method.
-func (m *MockUsersAPI) CheckExists(ctx context.Context, id int) (bool, error) {
+// GenerateRandomSlug mocks base method.
+func (m *MockSlugGenerator) GenerateRandomSlug() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckExists", ctx, id)
-	ret0, _ := ret[0].(bool)
+	ret := m.ctrl.Call(m, "GenerateRandomSlug")
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CheckExists indicates an expected call of CheckExists.
-func (mr *MockUsersAPIMockRecorder) CheckExists(ctx, id any) *gomock.Call {
+// GenerateRandomSlug indicates an expected call of GenerateRandomSlug.
+func (mr *MockSlugGeneratorMockRecorder) GenerateRandomSlug() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExists", reflect.TypeOf((*MockUsersAPI)(nil).CheckExists), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateRandomSlug", reflect.TypeOf((*MockSlugGenerator)(nil).GenerateRandomSlug))
 }

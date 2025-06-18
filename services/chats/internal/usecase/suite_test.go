@@ -13,25 +13,28 @@ import (
 )
 
 type useCaseTestSuite struct {
-	chatsUseCase  *chats.UseCase
-	mockChatsRepo *MockChatsRepo
-	mockTxManager *MockTransactionsManager
-	mockUsersApi  *MockUsersAPI
-	ctrl          *gomock.Controller
+	chatsUseCase      *chats.UseCase
+	mockChatsRepo     *MockChatsRepo
+	mockTxManager     *MockTransactionsManager
+	mockUsersRepo     *MockUsersRepo
+	mockSlugGenerator *MockSlugGenerator
+	ctrl              *gomock.Controller
 }
 
 func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	ctrl := gomock.NewController(t)
 	mockTxManager := NewMockTransactionsManager(ctrl)
 	mockChatsRepo := NewMockChatsRepo(ctrl)
-	mockUsersApi := NewMockUsersAPI(ctrl)
-	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersApi)
+	mockUsersRepo := NewMockUsersRepo(ctrl)
+	mockSlugGenerator := NewMockSlugGenerator(ctrl)
+	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersRepo, mockSlugGenerator)
 	return &useCaseTestSuite{
-		chatsUseCase:  chatsUseCase,
-		mockChatsRepo: mockChatsRepo,
-		mockTxManager: mockTxManager,
-		mockUsersApi:  mockUsersApi,
-		ctrl:          ctrl,
+		chatsUseCase:      chatsUseCase,
+		mockChatsRepo:     mockChatsRepo,
+		mockTxManager:     mockTxManager,
+		mockUsersRepo:     mockUsersRepo,
+		mockSlugGenerator: mockSlugGenerator,
+		ctrl:              ctrl,
 	}
 }
 

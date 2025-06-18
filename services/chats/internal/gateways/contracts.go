@@ -14,6 +14,9 @@ type (
 		GetAll(ctx context.Context) ([]entity.Chat, error)
 		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
 	}
+	UsersRepo interface {
+		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
+	}
 	Transaction interface {
 		Commit(ctx context.Context) error
 		Rollback(ctx context.Context) error
@@ -21,7 +24,7 @@ type (
 	TransactionsManager interface {
 		StartTransaction(ctx context.Context) (Transaction, error)
 	}
-	UsersAPI interface {
-		CheckExists(ctx context.Context, id int) (bool, error)
+	SlugGenerator interface {
+		GenerateRandomSlug() (string, error)
 	}
 )

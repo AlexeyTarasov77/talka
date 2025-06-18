@@ -37,6 +37,7 @@ type (
 
 	GroupChat struct {
 		Chat
+		// OwnerId and Name create unique pair (same user can't have multiple chats with same name)
 		OwnerId     int
 		Name        string
 		Description string // OPTIONAL
@@ -48,6 +49,7 @@ type (
 		// IsPublic indicates whether chat is public and anybody can join it or user can join only by sending request for approval
 		// DEFAULT: false
 		IsPublic bool
+		Members  []User
 	}
 )
 
