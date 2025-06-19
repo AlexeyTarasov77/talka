@@ -12,6 +12,7 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	entity "github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 	gateways "github.com/AlexeyTarasov77/messanger.chats/internal/gateways"
@@ -70,6 +71,20 @@ func (m *MockChatsRepo) Save(ctx context.Context, chat entity.Chat) (entity.Chat
 func (mr *MockChatsRepoMockRecorder) Save(ctx, chat any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockChatsRepo)(nil).Save), ctx, chat)
+}
+
+// UpdateLastMsgInfo mocks base method.
+func (m *MockChatsRepo) UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateLastMsgInfo", ctx, chatId, msgText, msgDate)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateLastMsgInfo indicates an expected call of UpdateLastMsgInfo.
+func (mr *MockChatsRepoMockRecorder) UpdateLastMsgInfo(ctx, chatId, msgText, msgDate any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLastMsgInfo", reflect.TypeOf((*MockChatsRepo)(nil).UpdateLastMsgInfo), ctx, chatId, msgText, msgDate)
 }
 
 // MockUsersRepo is a mock of UsersRepo interface.

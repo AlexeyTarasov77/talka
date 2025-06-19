@@ -231,3 +231,40 @@ func TestCreateGroupChat(t *testing.T) {
 		})
 	}
 }
+
+func TestUpdateLastMsg(t *testing.T) {
+	suite := NewUseCaseTestSuite(t)
+	ctx := context.Background()
+	var expectedMsg *entity.Message
+	testCases := []testCase{
+		{
+			name: "success",
+			mock: func() {
+				suite.mockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt)
+			},
+		},
+		{
+			name: "update error (unhandled)",
+			mock: func() {
+				suite.mockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt).Return(fakeErr)
+			},
+			err: fakeErr,
+		},
+		{
+			name: "update error (not found)",
+			mock: func() {
+				suite.mockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt).Return(storage.ErrNotFound)
+			},
+			err: chats.ErrChatNotFound,
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			expectedMsg = newTestMsg()
+			tc.mock()
+
+			err := suite.chatsUseCase.UpdateLastMsg(ctx, expectedMsg)
+			assert.ErrorIs(t, err, tc.err)
+		})
+	}
+}

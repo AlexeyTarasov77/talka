@@ -63,3 +63,13 @@ func newTestChat() entity.Chat {
 		LastMsgDate: gofakeit.DateRange(time.Now().AddDate(0, 0, -30), time.Now()),
 	}
 }
+
+func newTestMsg() *entity.Message {
+	return &entity.Message{
+		ID:        gofakeit.Number(1, 999999),
+		ChatId:    gofakeit.Number(1, 999999),
+		Text:      gofakeit.Sentence(3),
+		CreatedAt: gofakeit.DateRange(time.Now().AddDate(0, 0, -30), time.Now()),
+		UpdatedAt: gofakeit.DateRange(time.Now().AddDate(0, 0, -30), time.Now()),
+	}
+}

@@ -3,6 +3,7 @@ package gateways
 
 import (
 	"context"
+	"time"
 
 	"github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 )
@@ -13,6 +14,7 @@ type (
 	ChatsRepo interface {
 		GetAll(ctx context.Context) ([]entity.Chat, error)
 		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
+		UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error
 	}
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
