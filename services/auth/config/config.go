@@ -11,7 +11,7 @@ import (
 
 var (
 	_, filename, _, _ = runtime.Caller(0)
-	Root              = filepath.Join(filepath.Dir(filename), "../..")
+	Root              = filepath.Join(filepath.Dir(filename), "../")
 )
 
 type (
@@ -20,8 +20,7 @@ type (
 		App     App
 		HTTP    HTTP
 		Log     Log
-		PG      PG
-		GRPC    GRPC
+		DB      Database
 		RMQ     RMQ
 		Metrics Metrics
 		Swagger Swagger
@@ -36,7 +35,7 @@ type (
 	// HTTP -.
 	HTTP struct {
 		Port           string `env:"HTTP_PORT,required"`
-		UsePreforkMode bool   `env:"HTTP_USE_PREFORK_MODE" envDefault:"false"`
+		UsePreforkMode bool   `env:"HTTP_USE_PREFORK_MODE" env-default:"false"`
 	}
 
 	// Log -.
@@ -44,15 +43,10 @@ type (
 		Level string `env:"LOG_LEVEL,required"`
 	}
 
-	// PG -.
-	PG struct {
-		PoolMax int    `env:"PG_POOL_MAX,required"`
-		URL     string `env:"PG_URL,required"`
-	}
-
-	// GRPC -.
-	GRPC struct {
-		Port string `env:"GRPC_PORT,required"`
+	// Database -.
+	Database struct {
+		PoolMax int    `env:"DB_POOL_MAX" env-default:"10"`
+		URL     string `env:"DB_URL,required"`
 	}
 
 	// RMQ -.
@@ -64,12 +58,12 @@ type (
 
 	// Metrics -.
 	Metrics struct {
-		Enabled bool `env:"METRICS_ENABLED" envDefault:"true"`
+		Enabled bool `env:"METRICS_ENABLED" env-default:"true"`
 	}
 
 	// Swagger -.
 	Swagger struct {
-		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
+		Enabled bool `env:"SWAGGER_ENABLED" env-default:"false"`
 	}
 )
 

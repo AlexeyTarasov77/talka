@@ -12,7 +12,7 @@ import (
 func NewTestSuite(t *testing.T, ctx context.Context) (*Postgres, pgx.Tx) {
 	os.Setenv("MODE", "test")
 	cfg := config.MustLoad()
-	pg, err := New(cfg.PG.URL)
+	pg, err := New(cfg.DB.URL)
 	if err != nil {
 		t.Fatal(err)
 	}

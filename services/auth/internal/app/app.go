@@ -9,8 +9,8 @@ import (
 
 	"github.com/AlexeyTarasov77/messanger.users/config"
 	"github.com/AlexeyTarasov77/messanger.users/internal/controller/http"
-	repo "github.com/AlexeyTarasov77/messanger.users/internal/gateways/storage/postgres"
-	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/chats"
+	repo "github.com/AlexeyTarasov77/messanger.users/internal/gateways/storage/mysql"
+	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
 	"github.com/AlexeyTarasov77/messanger.users/pkg/httpserver"
 	"github.com/AlexeyTarasov77/messanger.users/pkg/logger"
 	"github.com/AlexeyTarasov77/messanger.users/pkg/postgres"
@@ -21,7 +21,7 @@ func Run(cfg *config.Config) {
 	l := logger.New(cfg.Log.Level)
 
 	// Repository
-	pg, err := postgres.New(cfg.PG.URL, postgres.MaxPoolSize(cfg.PG.PoolMax))
+	pg, err := postgres.New(cfg.DB.URL, postgres.MaxPoolSize(cfg.DB.PoolMax))
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
