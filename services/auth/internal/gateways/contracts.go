@@ -26,8 +26,14 @@ type (
 		GetAccessToken(ctx context.Context, authCode string) (string, error)
 		FetchUserData(ctx context.Context) (*entity.User, error)
 	}
-	Storage interface {
-		Get(key string) (string, error)
-		Set(key, value string) error
+	SessionManager interface {
+		GetSessionData() (map[string]any, error)
+		SetToSession(key, value string) error
+	}
+	SessionManagerFactory interface {
+		CreateSessionManager(sessionId string) SessionManager
+	}
+	SecurityProvider interface {
+		GenerateSecureUrlSafeToken() string
 	}
 )

@@ -163,41 +163,199 @@ func (mr *MockTransactionsManagerMockRecorder) StartTransaction(ctx any) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartTransaction", reflect.TypeOf((*MockTransactionsManager)(nil).StartTransaction), ctx)
 }
 
-// MockSlugGenerator is a mock of SlugGenerator interface.
-type MockSlugGenerator struct {
+// MockOAuthProvider is a mock of OAuthProvider interface.
+type MockOAuthProvider struct {
 	ctrl     *gomock.Controller
-	recorder *MockSlugGeneratorMockRecorder
+	recorder *MockOAuthProviderMockRecorder
 	isgomock struct{}
 }
 
-// MockSlugGeneratorMockRecorder is the mock recorder for MockSlugGenerator.
-type MockSlugGeneratorMockRecorder struct {
-	mock *MockSlugGenerator
+// MockOAuthProviderMockRecorder is the mock recorder for MockOAuthProvider.
+type MockOAuthProviderMockRecorder struct {
+	mock *MockOAuthProvider
 }
 
-// NewMockSlugGenerator creates a new mock instance.
-func NewMockSlugGenerator(ctrl *gomock.Controller) *MockSlugGenerator {
-	mock := &MockSlugGenerator{ctrl: ctrl}
-	mock.recorder = &MockSlugGeneratorMockRecorder{mock}
+// NewMockOAuthProvider creates a new mock instance.
+func NewMockOAuthProvider(ctrl *gomock.Controller) *MockOAuthProvider {
+	mock := &MockOAuthProvider{ctrl: ctrl}
+	mock.recorder = &MockOAuthProviderMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSlugGenerator) EXPECT() *MockSlugGeneratorMockRecorder {
+func (m *MockOAuthProvider) EXPECT() *MockOAuthProviderMockRecorder {
 	return m.recorder
 }
 
-// GenerateRandomSlug mocks base method.
-func (m *MockSlugGenerator) GenerateRandomSlug() (string, error) {
+// FetchUserData mocks base method.
+func (m *MockOAuthProvider) FetchUserData(ctx context.Context) (*entity.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GenerateRandomSlug")
+	ret := m.ctrl.Call(m, "FetchUserData", ctx)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FetchUserData indicates an expected call of FetchUserData.
+func (mr *MockOAuthProviderMockRecorder) FetchUserData(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchUserData", reflect.TypeOf((*MockOAuthProvider)(nil).FetchUserData), ctx)
+}
+
+// GetAccessToken mocks base method.
+func (m *MockOAuthProvider) GetAccessToken(ctx context.Context, authCode string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessToken", ctx, authCode)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GenerateRandomSlug indicates an expected call of GenerateRandomSlug.
-func (mr *MockSlugGeneratorMockRecorder) GenerateRandomSlug() *gomock.Call {
+// GetAccessToken indicates an expected call of GetAccessToken.
+func (mr *MockOAuthProviderMockRecorder) GetAccessToken(ctx, authCode any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateRandomSlug", reflect.TypeOf((*MockSlugGenerator)(nil).GenerateRandomSlug))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessToken", reflect.TypeOf((*MockOAuthProvider)(nil).GetAccessToken), ctx, authCode)
+}
+
+// GetAuthURL mocks base method.
+func (m *MockOAuthProvider) GetAuthURL(stateToken string) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthURL", stateToken)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetAuthURL indicates an expected call of GetAuthURL.
+func (mr *MockOAuthProviderMockRecorder) GetAuthURL(stateToken any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthURL", reflect.TypeOf((*MockOAuthProvider)(nil).GetAuthURL), stateToken)
+}
+
+// MockSessionManager is a mock of SessionManager interface.
+type MockSessionManager struct {
+	ctrl     *gomock.Controller
+	recorder *MockSessionManagerMockRecorder
+	isgomock struct{}
+}
+
+// MockSessionManagerMockRecorder is the mock recorder for MockSessionManager.
+type MockSessionManagerMockRecorder struct {
+	mock *MockSessionManager
+}
+
+// NewMockSessionManager creates a new mock instance.
+func NewMockSessionManager(ctrl *gomock.Controller) *MockSessionManager {
+	mock := &MockSessionManager{ctrl: ctrl}
+	mock.recorder = &MockSessionManagerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSessionManager) EXPECT() *MockSessionManagerMockRecorder {
+	return m.recorder
+}
+
+// GetSessionData mocks base method.
+func (m *MockSessionManager) GetSessionData() (map[string]any, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSessionData")
+	ret0, _ := ret[0].(map[string]any)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSessionData indicates an expected call of GetSessionData.
+func (mr *MockSessionManagerMockRecorder) GetSessionData() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSessionData", reflect.TypeOf((*MockSessionManager)(nil).GetSessionData))
+}
+
+// SetToSession mocks base method.
+func (m *MockSessionManager) SetToSession(key, value string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetToSession", key, value)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetToSession indicates an expected call of SetToSession.
+func (mr *MockSessionManagerMockRecorder) SetToSession(key, value any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetToSession", reflect.TypeOf((*MockSessionManager)(nil).SetToSession), key, value)
+}
+
+// MockSessionManagerFactory is a mock of SessionManagerFactory interface.
+type MockSessionManagerFactory struct {
+	ctrl     *gomock.Controller
+	recorder *MockSessionManagerFactoryMockRecorder
+	isgomock struct{}
+}
+
+// MockSessionManagerFactoryMockRecorder is the mock recorder for MockSessionManagerFactory.
+type MockSessionManagerFactoryMockRecorder struct {
+	mock *MockSessionManagerFactory
+}
+
+// NewMockSessionManagerFactory creates a new mock instance.
+func NewMockSessionManagerFactory(ctrl *gomock.Controller) *MockSessionManagerFactory {
+	mock := &MockSessionManagerFactory{ctrl: ctrl}
+	mock.recorder = &MockSessionManagerFactoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSessionManagerFactory) EXPECT() *MockSessionManagerFactoryMockRecorder {
+	return m.recorder
+}
+
+// CreateSessionManager mocks base method.
+func (m *MockSessionManagerFactory) CreateSessionManager(sessionId string) gateways.SessionManager {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSessionManager", sessionId)
+	ret0, _ := ret[0].(gateways.SessionManager)
+	return ret0
+}
+
+// CreateSessionManager indicates an expected call of CreateSessionManager.
+func (mr *MockSessionManagerFactoryMockRecorder) CreateSessionManager(sessionId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSessionManager", reflect.TypeOf((*MockSessionManagerFactory)(nil).CreateSessionManager), sessionId)
+}
+
+// MockSecurityProvider is a mock of SecurityProvider interface.
+type MockSecurityProvider struct {
+	ctrl     *gomock.Controller
+	recorder *MockSecurityProviderMockRecorder
+	isgomock struct{}
+}
+
+// MockSecurityProviderMockRecorder is the mock recorder for MockSecurityProvider.
+type MockSecurityProviderMockRecorder struct {
+	mock *MockSecurityProvider
+}
+
+// NewMockSecurityProvider creates a new mock instance.
+func NewMockSecurityProvider(ctrl *gomock.Controller) *MockSecurityProvider {
+	mock := &MockSecurityProvider{ctrl: ctrl}
+	mock.recorder = &MockSecurityProviderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSecurityProvider) EXPECT() *MockSecurityProviderMockRecorder {
+	return m.recorder
+}
+
+// GenerateSecureUrlSafeToken mocks base method.
+func (m *MockSecurityProvider) GenerateSecureUrlSafeToken() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateSecureUrlSafeToken")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GenerateSecureUrlSafeToken indicates an expected call of GenerateSecureUrlSafeToken.
+func (mr *MockSecurityProviderMockRecorder) GenerateSecureUrlSafeToken() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateSecureUrlSafeToken", reflect.TypeOf((*MockSecurityProvider)(nil).GenerateSecureUrlSafeToken))
 }

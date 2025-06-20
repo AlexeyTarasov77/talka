@@ -11,7 +11,7 @@ func (p OAuthProviderId) String() string {
 	return []string{"Google", "GitHub"}[p]
 }
 
-type OAuthProvider struct {
+type OAuthProviderInfo struct {
 	ID   OAuthProviderId
 	Name string
 }

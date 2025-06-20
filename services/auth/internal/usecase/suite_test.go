@@ -9,22 +9,33 @@ import (
 )
 
 type useCaseTestSuite struct {
-	authUseCase   *auth.UseCase
-	mockTxManager *MockTransactionsManager
-	mockUsersRepo *MockUsersRepo
-	ctrl          *gomock.Controller
+	authUseCase               *auth.UseCase
+	mockTxManager             *MockTransactionsManager
+	mockUsersRepo             *MockUsersRepo
+	mockOAuthProvider         *MockOAuthProvider
+	mockSessionManager        *MockSessionManager
+	mockSessionManagerFactory *MockSessionManagerFactory
+	mockSecurityProvider      *MockSecurityProvider
+	ctrl                      *gomock.Controller
 }
 
 func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	ctrl := gomock.NewController(t)
 	mockTxManager := NewMockTransactionsManager(ctrl)
 	mockUsersRepo := NewMockUsersRepo(ctrl)
-	chatsUseCase := auth.New(mockTxManager, mockUsersRepo)
+	mockSessionManager := NewMockSessionManager(ctrl)
+	mockSessionManagerFactory := NewMockSessionManagerFactory(ctrl)
+	mockSecurityProvider := NewMockSecurityProvider(ctrl)
+	chatsUseCase := auth.New(mockTxManager, mockUsersRepo, mockSessionManagerFactory, mockSecurityProvider)
 	return &useCaseTestSuite{
-		authUseCase:   chatsUseCase,
-		mockTxManager: mockTxManager,
-		mockUsersRepo: mockUsersRepo,
-		ctrl:          ctrl,
+		authUseCase:               chatsUseCase,
+		mockOAuthProvider:         NewMockOAuthProvider(ctrl),
+		mockTxManager:             mockTxManager,
+		mockUsersRepo:             mockUsersRepo,
+		mockSessionManager:        mockSessionManager,
+		mockSessionManagerFactory: mockSessionManagerFactory,
+		mockSecurityProvider:      mockSecurityProvider,
+		ctrl:                      ctrl,
 	}
 }
 
