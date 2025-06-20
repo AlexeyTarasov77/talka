@@ -2,36 +2,29 @@ package usecase_test
 
 import (
 	"context"
-	"math/rand"
 	"testing"
-	"time"
 
-	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
 	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
-	"github.com/brianvoe/gofakeit"
 	"go.uber.org/mock/gomock"
 )
 
 type useCaseTestSuite struct {
-	authUseCase       *auth.UseCase
-	mockTxManager     *MockTransactionsManager
-	mockUsersRepo     *MockUsersRepo
-	mockSlugGenerator *MockSlugGenerator
-	ctrl              *gomock.Controller
+	authUseCase   *auth.UseCase
+	mockTxManager *MockTransactionsManager
+	mockUsersRepo *MockUsersRepo
+	ctrl          *gomock.Controller
 }
 
 func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	ctrl := gomock.NewController(t)
 	mockTxManager := NewMockTransactionsManager(ctrl)
 	mockUsersRepo := NewMockUsersRepo(ctrl)
-	mockSlugGenerator := NewMockSlugGenerator(ctrl)
 	chatsUseCase := auth.New(mockTxManager, mockUsersRepo)
 	return &useCaseTestSuite{
-		authUseCase:       chatsUseCase,
-		mockTxManager:     mockTxManager,
-		mockUsersRepo:     mockUsersRepo,
-		mockSlugGenerator: mockSlugGenerator,
-		ctrl:              ctrl,
+		authUseCase:   chatsUseCase,
+		mockTxManager: mockTxManager,
+		mockUsersRepo: mockUsersRepo,
+		ctrl:          ctrl,
 	}
 }
 

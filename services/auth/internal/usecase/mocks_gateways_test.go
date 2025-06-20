@@ -12,80 +12,11 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
-	time "time"
 
 	entity "github.com/AlexeyTarasov77/messanger.users/internal/entity"
 	gateways "github.com/AlexeyTarasov77/messanger.users/internal/gateways"
 	gomock "go.uber.org/mock/gomock"
 )
-
-// MockChatsRepo is a mock of ChatsRepo interface.
-type MockChatsRepo struct {
-	ctrl     *gomock.Controller
-	recorder *MockChatsRepoMockRecorder
-	isgomock struct{}
-}
-
-// MockChatsRepoMockRecorder is the mock recorder for MockChatsRepo.
-type MockChatsRepoMockRecorder struct {
-	mock *MockChatsRepo
-}
-
-// NewMockChatsRepo creates a new mock instance.
-func NewMockChatsRepo(ctrl *gomock.Controller) *MockChatsRepo {
-	mock := &MockChatsRepo{ctrl: ctrl}
-	mock.recorder = &MockChatsRepoMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockChatsRepo) EXPECT() *MockChatsRepoMockRecorder {
-	return m.recorder
-}
-
-// GetAll mocks base method.
-func (m *MockChatsRepo) GetAll(ctx context.Context) ([]entity.Chat, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll", ctx)
-	ret0, _ := ret[0].([]entity.Chat)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetAll indicates an expected call of GetAll.
-func (mr *MockChatsRepoMockRecorder) GetAll(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockChatsRepo)(nil).GetAll), ctx)
-}
-
-// Save mocks base method.
-func (m *MockChatsRepo) Save(ctx context.Context, chat entity.Chat) (entity.Chat, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save", ctx, chat)
-	ret0, _ := ret[0].(entity.Chat)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Save indicates an expected call of Save.
-func (mr *MockChatsRepoMockRecorder) Save(ctx, chat any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockChatsRepo)(nil).Save), ctx, chat)
-}
-
-// UpdateLastMsgInfo mocks base method.
-func (m *MockChatsRepo) UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateLastMsgInfo", ctx, chatId, msgText, msgDate)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateLastMsgInfo indicates an expected call of UpdateLastMsgInfo.
-func (mr *MockChatsRepoMockRecorder) UpdateLastMsgInfo(ctx, chatId, msgText, msgDate any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLastMsgInfo", reflect.TypeOf((*MockChatsRepo)(nil).UpdateLastMsgInfo), ctx, chatId, msgText, msgDate)
-}
 
 // MockUsersRepo is a mock of UsersRepo interface.
 type MockUsersRepo struct {
@@ -124,6 +55,21 @@ func (m *MockUsersRepo) CheckExistsByIds(ctx context.Context, ids []int) (bool, 
 func (mr *MockUsersRepoMockRecorder) CheckExistsByIds(ctx, ids any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByIds", reflect.TypeOf((*MockUsersRepo)(nil).CheckExistsByIds), ctx, ids)
+}
+
+// Insert mocks base method.
+func (m *MockUsersRepo) Insert(ctx context.Context, user *entity.User) (*entity.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Insert", ctx, user)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Insert indicates an expected call of Insert.
+func (mr *MockUsersRepoMockRecorder) Insert(ctx, user any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUsersRepo)(nil).Insert), ctx, user)
 }
 
 // MockTransaction is a mock of Transaction interface.

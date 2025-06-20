@@ -3,7 +3,6 @@ package gateways
 
 import (
 	"context"
-	"time"
 
 	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
 )
@@ -11,13 +10,9 @@ import (
 //go:generate mockgen -source=contracts.go -destination=../usecase/mocks_gateways_test.go -package=usecase_test
 
 type (
-	ChatsRepo interface {
-		GetAll(ctx context.Context) ([]entity.Chat, error)
-		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
-		UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error
-	}
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
+		Insert(ctx context.Context, user *entity.User) (*entity.User, error)
 	}
 	Transaction interface {
 		Commit(ctx context.Context) error

@@ -20,6 +20,7 @@ type (
 		App     App
 		HTTP    HTTP
 		Log     Log
+		OAuth   OAuth
 		DB      Database
 		RMQ     RMQ
 		Metrics Metrics
@@ -41,6 +42,12 @@ type (
 	// Log -.
 	Log struct {
 		Level string `env:"LOG_LEVEL,required"`
+	}
+
+	// OAuth -.
+	OAuth struct {
+		ClientID     string `env:"OAUTH_CLIENT_ID,required"`
+		ClientSecret string `env:"OAUTH_CLIENT_SECRET,required"`
 	}
 
 	// Database -.

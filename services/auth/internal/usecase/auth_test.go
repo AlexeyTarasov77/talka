@@ -5,11 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/AlexeyTarasov77/messanger.users/internal/dto"
 	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
-	"github.com/AlexeyTarasov77/messanger.users/internal/gateways/storage"
-	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
-	"github.com/brianvoe/gofakeit"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,4 +16,16 @@ type testCase struct {
 	mock     func()
 	expected any
 	err      error
+}
+
+func TestGetOAuthProviders(t *testing.T) {
+	suite := NewUseCaseTestSuite(t)
+	ctx := context.Background()
+	expectedProviders := make([]entity.OAuthProvider, 0, len(entity.OAuthSupportedProviders))
+	for _, id := range entity.OAuthSupportedProviders {
+		expectedProviders = append(expectedProviders, entity.OAuthProvider{ID: id, Name: id.String()})
+	}
+	providers := suite.authUseCase.GetOAuthProviders(ctx)
+
+	assert.Equal(t, expectedProviders, providers)
 }
