@@ -1,9 +1,12 @@
 package oauth
 
-import "github.com/AlexeyTarasov77/messanger.users/internal/gateways/oauth/providers"
+import (
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways"
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways/oauth/providers"
+)
 
 type Providers struct {
-	Google oauth_providers.Interface
+	Google gateways.OAuthProvider
 }
 
 func New(clientID, clientSecret, redirectURL string) *Providers {

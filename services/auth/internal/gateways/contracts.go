@@ -21,7 +21,13 @@ type (
 	TransactionsManager interface {
 		StartTransaction(ctx context.Context) (Transaction, error)
 	}
-	SlugGenerator interface {
-		GenerateRandomSlug() (string, error)
+	OAuthProvider interface {
+		GetAuthURL(stateToken string) string
+		GetAccessToken(ctx context.Context, authCode string) (string, error)
+		FetchUserData(ctx context.Context) (*entity.User, error)
+	}
+	Storage interface {
+		Get(key string) (string, error)
+		Set(key, value string) error
 	}
 )
