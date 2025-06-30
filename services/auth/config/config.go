@@ -35,8 +35,7 @@ type (
 
 	// HTTP -.
 	HTTP struct {
-		Port           string `env:"HTTP_PORT,required"`
-		UsePreforkMode bool   `env:"HTTP_USE_PREFORK_MODE" env-default:"false"`
+		Port string `env:"HTTP_PORT,required"`
 	}
 
 	// Log -.

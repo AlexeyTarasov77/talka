@@ -3,7 +3,8 @@
 .vscode
 
 # Config
-.env
+.env*
+!.env.example
 
 # Binaries for programs and plugins
 *.exe

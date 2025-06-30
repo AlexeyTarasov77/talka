@@ -4,8 +4,7 @@
 nginx
 
 .dockerignore
-.env
-.env.example
+.env.*
 .golangci.yml
 .gitignore
 
