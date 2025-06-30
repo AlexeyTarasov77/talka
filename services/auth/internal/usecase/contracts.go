@@ -3,6 +3,8 @@ package usecase
 
 import (
 	"context"
+
+	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
 )
 
 type txCtxKeyType string
@@ -17,5 +19,7 @@ func SetTransaction(ctx context.Context, tx any) context.Context {
 
 type (
 	Auth interface {
+		SignIn(ctx context.Context) (*entity.User, error)
+		GetOAuthProviders(ctx context.Context) []entity.OAuthProviderInfo
 	}
 )

@@ -33,13 +33,10 @@ func (g *Google) GetAccessToken(ctx context.Context, authCode string) (string, e
 	if err != nil {
 		return "", err
 	}
-	g.client = oauth2.NewClient(ctx, oauth2.StaticTokenSource(token))
 	return token.AccessToken, nil
 }
 
-func (g *Google) FetchUserData(ctx context.Context) (*entity.User, error) {
-	if g.client == nil {
-		panic("Unable to fetch due to uninitialized authorized http client: you should call GetAccessToken first")
-	}
+func (g *Google) FetchUserData(ctx context.Context, accessToken string) (*entity.User, error) {
+	// client := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: accessToken}))
 	return nil, nil
 }

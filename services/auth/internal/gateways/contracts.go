@@ -3,6 +3,7 @@ package gateways
 
 import (
 	"context"
+	"time"
 
 	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
 )
@@ -13,6 +14,7 @@ type (
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
 		Insert(ctx context.Context, user *entity.User) (*entity.User, error)
+		GetByOAuthAccId(ctx context.Context, accId string) (*entity.User, error)
 	}
 	Transaction interface {
 		Commit(ctx context.Context) error
@@ -24,7 +26,7 @@ type (
 	OAuthProvider interface {
 		GetAuthURL(stateToken string) string
 		GetAccessToken(ctx context.Context, authCode string) (string, error)
-		FetchUserData(ctx context.Context) (*entity.User, error)
+		FetchUserData(ctx context.Context, accessToken string) (*entity.User, error)
 	}
 	SessionManager interface {
 		GetSessionData() (map[string]any, error)
@@ -32,6 +34,9 @@ type (
 	}
 	SessionManagerFactory interface {
 		CreateSessionManager(sessionId string) SessionManager
+	}
+	JwtProvider interface {
+		NewToken(expires time.Duration, claims map[string]any) (string, error)
 	}
 	SecurityProvider interface {
 		GenerateSecureUrlSafeToken() string

@@ -3,6 +3,7 @@ package usecase_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
 	"go.uber.org/mock/gomock"
@@ -16,6 +17,7 @@ type useCaseTestSuite struct {
 	mockSessionManager        *MockSessionManager
 	mockSessionManagerFactory *MockSessionManagerFactory
 	mockSecurityProvider      *MockSecurityProvider
+	mockJwtProvider           *MockJwtProvider
 	ctrl                      *gomock.Controller
 }
 
@@ -26,7 +28,8 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	mockSessionManager := NewMockSessionManager(ctrl)
 	mockSessionManagerFactory := NewMockSessionManagerFactory(ctrl)
 	mockSecurityProvider := NewMockSecurityProvider(ctrl)
-	chatsUseCase := auth.New(mockTxManager, mockUsersRepo, mockSessionManagerFactory, mockSecurityProvider)
+	mockJwtProvider := NewMockJwtProvider(ctrl)
+	chatsUseCase := auth.New(mockTxManager, mockUsersRepo, mockSessionManagerFactory, mockSecurityProvider, mockJwtProvider, time.Hour)
 	return &useCaseTestSuite{
 		authUseCase:               chatsUseCase,
 		mockOAuthProvider:         NewMockOAuthProvider(ctrl),
@@ -34,6 +37,7 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 		mockUsersRepo:             mockUsersRepo,
 		mockSessionManager:        mockSessionManager,
 		mockSessionManagerFactory: mockSessionManagerFactory,
+		mockJwtProvider:           mockJwtProvider,
 		mockSecurityProvider:      mockSecurityProvider,
 		ctrl:                      ctrl,
 	}

@@ -12,6 +12,7 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	entity "github.com/AlexeyTarasov77/messanger.users/internal/entity"
 	gateways "github.com/AlexeyTarasov77/messanger.users/internal/gateways"
@@ -55,6 +56,21 @@ func (m *MockUsersRepo) CheckExistsByIds(ctx context.Context, ids []int) (bool, 
 func (mr *MockUsersRepoMockRecorder) CheckExistsByIds(ctx, ids any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByIds", reflect.TypeOf((*MockUsersRepo)(nil).CheckExistsByIds), ctx, ids)
+}
+
+// GetByOAuthAccId mocks base method.
+func (m *MockUsersRepo) GetByOAuthAccId(ctx context.Context, accId string) (*entity.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByOAuthAccId", ctx, accId)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByOAuthAccId indicates an expected call of GetByOAuthAccId.
+func (mr *MockUsersRepoMockRecorder) GetByOAuthAccId(ctx, accId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByOAuthAccId", reflect.TypeOf((*MockUsersRepo)(nil).GetByOAuthAccId), ctx, accId)
 }
 
 // Insert mocks base method.
@@ -188,18 +204,18 @@ func (m *MockOAuthProvider) EXPECT() *MockOAuthProviderMockRecorder {
 }
 
 // FetchUserData mocks base method.
-func (m *MockOAuthProvider) FetchUserData(ctx context.Context) (*entity.User, error) {
+func (m *MockOAuthProvider) FetchUserData(ctx context.Context, accessToken string) (*entity.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FetchUserData", ctx)
+	ret := m.ctrl.Call(m, "FetchUserData", ctx, accessToken)
 	ret0, _ := ret[0].(*entity.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FetchUserData indicates an expected call of FetchUserData.
-func (mr *MockOAuthProviderMockRecorder) FetchUserData(ctx any) *gomock.Call {
+func (mr *MockOAuthProviderMockRecorder) FetchUserData(ctx, accessToken any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchUserData", reflect.TypeOf((*MockOAuthProvider)(nil).FetchUserData), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchUserData", reflect.TypeOf((*MockOAuthProvider)(nil).FetchUserData), ctx, accessToken)
 }
 
 // GetAccessToken mocks base method.
@@ -320,6 +336,45 @@ func (m *MockSessionManagerFactory) CreateSessionManager(sessionId string) gatew
 func (mr *MockSessionManagerFactoryMockRecorder) CreateSessionManager(sessionId any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSessionManager", reflect.TypeOf((*MockSessionManagerFactory)(nil).CreateSessionManager), sessionId)
+}
+
+// MockJwtProvider is a mock of JwtProvider interface.
+type MockJwtProvider struct {
+	ctrl     *gomock.Controller
+	recorder *MockJwtProviderMockRecorder
+	isgomock struct{}
+}
+
+// MockJwtProviderMockRecorder is the mock recorder for MockJwtProvider.
+type MockJwtProviderMockRecorder struct {
+	mock *MockJwtProvider
+}
+
+// NewMockJwtProvider creates a new mock instance.
+func NewMockJwtProvider(ctrl *gomock.Controller) *MockJwtProvider {
+	mock := &MockJwtProvider{ctrl: ctrl}
+	mock.recorder = &MockJwtProviderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockJwtProvider) EXPECT() *MockJwtProviderMockRecorder {
+	return m.recorder
+}
+
+// NewToken mocks base method.
+func (m *MockJwtProvider) NewToken(expires time.Duration, claims map[string]any) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NewToken", expires, claims)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NewToken indicates an expected call of NewToken.
+func (mr *MockJwtProviderMockRecorder) NewToken(expires, claims any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewToken", reflect.TypeOf((*MockJwtProvider)(nil).NewToken), expires, claims)
 }
 
 // MockSecurityProvider is a mock of SecurityProvider interface.
