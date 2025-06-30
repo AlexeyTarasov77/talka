@@ -8,6 +8,7 @@ import (
 	"github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 	"github.com/AlexeyTarasov77/messanger.chats/internal/gateways"
 	"github.com/AlexeyTarasov77/messanger.chats/internal/gateways/storage"
+	"github.com/AlexeyTarasov77/messanger.chats/internal/usecase"
 )
 
 // UseCase -.
@@ -58,15 +59,6 @@ func (uc *UseCase) CreatePersonalChat(ctx context.Context, payload *dto.CreatePe
 }
 
 func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroupChat) (*entity.GroupChat, error) {
-	if payload.MembersIds != nil && len(payload.MembersIds) > 0 {
-		isExists, err := uc.usersRepo.CheckExistsByIds(ctx, payload.MembersIds)
-		if err != nil {
-			return nil, err
-		}
-		if !isExists {
-			return nil, ErrMemberNotFound
-		}
-	}
 	ent := payload.MapToEntity()
 	if ent.Slug == "" {
 		generatedSlug, err := uc.slugGenerator.GenerateRandomSlug()
@@ -75,6 +67,12 @@ func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroup
 		}
 		ent.Slug = generatedSlug
 	}
+	tx, err := uc.txManager.StartTransaction(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ctx = usecase.SetTransaction(ctx, tx)
+	defer tx.Rollback(ctx)
 	chat, err := uc.chatsRepo.Save(ctx, ent)
 	if err != nil {
 		if errors.Is(err, storage.ErrAlreadyExists) {
@@ -82,6 +80,19 @@ func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroup
 		}
 		return nil, err
 	}
+	if len(payload.MembersIds) > 0 {
+		isExists, err := uc.usersRepo.CheckExistsByIds(ctx, payload.MembersIds)
+		if err != nil {
+			return nil, err
+		}
+		if !isExists {
+			return nil, ErrMemberNotFound
+		}
+		if err = uc.chatsRepo.AddMembers(ctx, chat.GetID(), payload.MembersIds); err != nil {
+			return nil, ErrMemberAlreadyInChat
+		}
+	}
+	tx.Commit(ctx)
 	return chat.(*entity.GroupChat), nil
 }
 

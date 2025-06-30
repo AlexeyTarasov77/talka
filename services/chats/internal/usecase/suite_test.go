@@ -40,17 +40,18 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 
 // setTxExpectations adds expectations on mock transaction manager and returned transaction
 // to ensure they are properly managed
-func setTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpected bool) {
+func setTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpected bool) *MockTransaction {
 	mockTx := NewMockTransaction(suite.ctrl)
 	suite.mockTxManager.EXPECT().StartTransaction(ctx).Return(mockTx, nil)
 	if commitExpected {
-		commitCall := mockTx.EXPECT().Commit(ctx).Return(nil)
-		// Rollback is always executed, because it's used in defer.
-		// But it'll take on effect if commit was already called before
-		mockTx.EXPECT().Rollback(ctx).Return(nil).After(commitCall)
-		return
+		commitCall := mockTx.EXPECT().Commit(gomock.Any()).Return(nil)
+		// Rollback is always executed, because it's expected to be used in defer stmt right after starting tx.
+		// But it'll take no effect if commit was already called before
+		mockTx.EXPECT().Rollback(gomock.Any()).Return(nil).After(commitCall)
+		return mockTx
 	}
-	mockTx.EXPECT().Rollback(ctx).Return(nil)
+	mockTx.EXPECT().Rollback(gomock.Any()).Return(nil)
+	return mockTx
 }
 
 func newTestChat() entity.Chat {

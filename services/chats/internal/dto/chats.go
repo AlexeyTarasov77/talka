@@ -19,20 +19,12 @@ type (
 )
 
 func (payload *CreateGroupChat) MapToEntity() *entity.GroupChat {
-	var chatMembers []entity.User
-	if payload.MembersIds != nil && len(payload.MembersIds) > 0 {
-		chatMembers = make([]entity.User, 0, len(payload.MembersIds))
-		for _, id := range payload.MembersIds {
-			chatMembers = append(chatMembers, entity.User{ID: id})
-		}
-	}
 	return &entity.GroupChat{
 		Chat:        &entity.BaseChat{Typ: entity.GroupChatType, ImageURL: payload.ImageURL},
 		OwnerId:     payload.CurrentUserId,
 		Name:        payload.Name,
 		Description: payload.Description,
 		Slug:        payload.Slug,
-		Members:     chatMembers,
 		IsPublic:    payload.IsPublic,
 	}
 }

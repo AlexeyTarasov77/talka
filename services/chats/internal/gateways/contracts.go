@@ -15,6 +15,7 @@ type (
 		GetAll(ctx context.Context) ([]entity.Chat, error)
 		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
 		UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error
+		AddMembers(ctx context.Context, groupChatId int, membersIds []int) error
 	}
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)

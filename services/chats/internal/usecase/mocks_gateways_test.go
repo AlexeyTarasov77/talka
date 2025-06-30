@@ -43,6 +43,20 @@ func (m *MockChatsRepo) EXPECT() *MockChatsRepoMockRecorder {
 	return m.recorder
 }
 
+// AddMembers mocks base method.
+func (m *MockChatsRepo) AddMembers(ctx context.Context, groupChatId int, membersIds []int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddMembers", ctx, groupChatId, membersIds)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddMembers indicates an expected call of AddMembers.
+func (mr *MockChatsRepoMockRecorder) AddMembers(ctx, groupChatId, membersIds any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMembers", reflect.TypeOf((*MockChatsRepo)(nil).AddMembers), ctx, groupChatId, membersIds)
+}
+
 // GetAll mocks base method.
 func (m *MockChatsRepo) GetAll(ctx context.Context) ([]entity.Chat, error) {
 	m.ctrl.T.Helper()
