@@ -117,3 +117,67 @@ func (uc *UseCase) UpdateLastMsg(ctx context.Context, msg *entity.Message) error
 	}
 	return nil
 }
+
+func (uc *UseCase) getLinkActivationsCount(ctx context.Context, link *entity.InvitationLink) (int, error) {
+	membersJoinedByLink, err := uc.chatsRepo.CountMembersByLink(ctx, link.GroupId, link.ID)
+	if err != nil {
+		return 0, err
+	}
+	joinReqsSentByLink := 0
+	if link.RequiresAdminApproval {
+		joinReqsSentByLink, err = uc.chatsRepo.CountJoinRequestsByLink(ctx, link.GroupId, link.ID)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return membersJoinedByLink + joinReqsSentByLink, nil
+}
+
+func (uc *UseCase) JoinGroupChat(ctx context.Context, userId int, linkUrl string) (isJoined bool, err error) {
+	tx, err := uc.txManager.StartTransaction(ctx)
+	if err != nil {
+		return isJoined, err
+	}
+	ctx = usecase.SetTransaction(ctx, tx)
+	defer tx.Rollback(ctx)
+	groupChat, err := uc.chatsRepo.GetGroupByLink(ctx, linkUrl)
+	if err != nil {
+		return isJoined, err
+	}
+	if groupChat.PrimaryLinkUrl == linkUrl {
+		if err = uc.chatsRepo.CreateJoinReq(ctx, userId, groupChat.GetID()); err != nil {
+			return isJoined, err
+		}
+		return isJoined, tx.Commit(ctx)
+	}
+	link, err := uc.linksRepo.GetByUrl(ctx, linkUrl)
+	if err != nil {
+		return isJoined, err
+	}
+	if link.IsExpired() {
+		return isJoined, ErrLinkExpired
+	}
+	if link.ActivationsLimit != 0 {
+		linkActivationsCount, err := uc.getLinkActivationsCount(ctx, link)
+		if err != nil {
+			return isJoined, err
+		}
+		if linkActivationsCount >= link.ActivationsLimit {
+			return isJoined, ErrLinkActivationsLimitExceeded
+		}
+	}
+	if link.RequiresAdminApproval {
+		if err = uc.chatsRepo.CreateJoinReq(ctx, userId, groupChat.GetID()); err != nil {
+			return isJoined, err
+		}
+		return isJoined, tx.Commit(ctx)
+	}
+	if err = uc.chatsRepo.AddMembers(ctx, groupChat.GetID(), []int{userId}); err != nil {
+		return isJoined, err
+	}
+	if err = tx.Commit(ctx); err != nil {
+		return isJoined, err
+	}
+	isJoined = true
+	return isJoined, err
+}

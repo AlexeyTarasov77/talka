@@ -4,21 +4,18 @@ import "time"
 
 type (
 	InvitationLink struct {
-		// Url serves purpose of unique link identifier
+		ID int
+		// Url is unique link code
 		Url     string
-		GroupId int
+		GroupId int `json:"group_id"`
 		// Name is optional link label visible to admins only
 		Name string
-		// RequestAdminApproval indicates whether admin should approve user's join request by this link before become participant. Default: false
-		RequestAdminApproval bool
+		// RequiresAdminApproval indicates whether admin should approve user's join request by this link before become participant. Default: false
+		RequiresAdminApproval bool `json:"requires_admin_approval"`
 		// ActivationsLimit indicates how many users can use this link. Optional
-		ActivationsLimit int
+		ActivationsLimit int `json:"activations_limit"`
 		// ExpiresAt  indicates when link expires and can't be used anymore. Optional
-		ExpiresAt time.Time
-	}
-	ChatJoinReq struct {
-		GroupChatId int
-		FromUserId  int
+		ExpiresAt time.Time `json:"expires_at"`
 	}
 )
 

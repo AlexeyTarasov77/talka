@@ -24,6 +24,7 @@ type (
 		CreatePersonalChat(ctx context.Context, dto dto.CreatePersonalChat) (*entity.PersonalChat, error)
 		CreateGroupChat(ctx context.Context, dto dto.CreateGroupChat) (*entity.GroupChat, error)
 		UpdateLastMsg(ctx context.Context, msg *entity.Message) error
-		JoinGroupChat(ctx context.Context, userId int, chatId int) error
+		JoinGroupChat(ctx context.Context, userId int, link string) (bool, error)
+		CheckIsLinkAvailable(ctx context.Context, link string) (bool, error)
 	}
 )

@@ -42,9 +42,14 @@ type (
 		Name        string
 		Description string // OPTIONAL
 		// PrimaryLinkUrl is unique field which is used in chat url.
-		// When group is not public - url with this slug serves purpose of invitation link
-		// Value should be automatically generated if not provided explicitly.
-		// PrimaryLinkUrl can be revoked - in this case new slug should be automatically generated
+		// User can join to the group by using this link.
+		// Link behaviour depends on the group type (public/private):
+		// - PUBLIC:
+		//   - must be provided by user and can be freely changed in the same way
+		//   - user can immediately join group by using this link
+		// - PRIVATE:
+		//   - a secure value must be automatically generated, can be "revoked" which means regenerating value
+		//   - user can only send a join request which requires approval to join by using this link
 		PrimaryLinkUrl string
 		// IsPublic indicates whether chat is public and anybody can join it or user can join only by sending request for approval
 		// DEFAULT: false

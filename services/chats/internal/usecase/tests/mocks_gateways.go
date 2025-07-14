@@ -57,6 +57,50 @@ func (mr *MockChatsRepoMockRecorder) AddMembers(ctx, groupChatId, membersIds any
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMembers", reflect.TypeOf((*MockChatsRepo)(nil).AddMembers), ctx, groupChatId, membersIds)
 }
 
+// CountJoinRequestsByLink mocks base method.
+func (m *MockChatsRepo) CountJoinRequestsByLink(ctx context.Context, groupId, linkId int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountJoinRequestsByLink", ctx, groupId, linkId)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountJoinRequestsByLink indicates an expected call of CountJoinRequestsByLink.
+func (mr *MockChatsRepoMockRecorder) CountJoinRequestsByLink(ctx, groupId, linkId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountJoinRequestsByLink", reflect.TypeOf((*MockChatsRepo)(nil).CountJoinRequestsByLink), ctx, groupId, linkId)
+}
+
+// CountMembersByLink mocks base method.
+func (m *MockChatsRepo) CountMembersByLink(ctx context.Context, groupId, linkId int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountMembersByLink", ctx, groupId, linkId)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountMembersByLink indicates an expected call of CountMembersByLink.
+func (mr *MockChatsRepoMockRecorder) CountMembersByLink(ctx, groupId, linkId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountMembersByLink", reflect.TypeOf((*MockChatsRepo)(nil).CountMembersByLink), ctx, groupId, linkId)
+}
+
+// CreateJoinReq mocks base method.
+func (m *MockChatsRepo) CreateJoinReq(ctx context.Context, userId, chatId int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateJoinReq", ctx, userId, chatId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateJoinReq indicates an expected call of CreateJoinReq.
+func (mr *MockChatsRepoMockRecorder) CreateJoinReq(ctx, userId, chatId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateJoinReq", reflect.TypeOf((*MockChatsRepo)(nil).CreateJoinReq), ctx, userId, chatId)
+}
+
 // GetAll mocks base method.
 func (m *MockChatsRepo) GetAll(ctx context.Context) ([]entity.Chat, error) {
 	m.ctrl.T.Helper()
@@ -70,6 +114,21 @@ func (m *MockChatsRepo) GetAll(ctx context.Context) ([]entity.Chat, error) {
 func (mr *MockChatsRepoMockRecorder) GetAll(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockChatsRepo)(nil).GetAll), ctx)
+}
+
+// GetGroupByLink mocks base method.
+func (m *MockChatsRepo) GetGroupByLink(ctx context.Context, link string) (*entity.GroupChat, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetGroupByLink", ctx, link)
+	ret0, _ := ret[0].(*entity.GroupChat)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetGroupByLink indicates an expected call of GetGroupByLink.
+func (mr *MockChatsRepoMockRecorder) GetGroupByLink(ctx, link any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroupByLink", reflect.TypeOf((*MockChatsRepo)(nil).GetGroupByLink), ctx, link)
 }
 
 // Save mocks base method.
@@ -138,6 +197,21 @@ func (m *MockInvitationLinksRepo) CheckExistsByUrl(ctx context.Context, url stri
 func (mr *MockInvitationLinksRepoMockRecorder) CheckExistsByUrl(ctx, url any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByUrl", reflect.TypeOf((*MockInvitationLinksRepo)(nil).CheckExistsByUrl), ctx, url)
+}
+
+// GetByUrl mocks base method.
+func (m *MockInvitationLinksRepo) GetByUrl(ctx context.Context, url string) (*entity.InvitationLink, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByUrl", ctx, url)
+	ret0, _ := ret[0].(*entity.InvitationLink)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByUrl indicates an expected call of GetByUrl.
+func (mr *MockInvitationLinksRepoMockRecorder) GetByUrl(ctx, url any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByUrl", reflect.TypeOf((*MockInvitationLinksRepo)(nil).GetByUrl), ctx, url)
 }
 
 // MockUsersRepo is a mock of UsersRepo interface.

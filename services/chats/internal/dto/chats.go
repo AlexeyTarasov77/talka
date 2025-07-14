@@ -16,10 +16,6 @@ type (
 		Slug          string
 		IsPublic      bool `json:"is_public"`
 	}
-	JoinChat struct {
-		CurrentUserId int `json:"current_user_id"`
-		ChatId        int `json:"chat_id"`
-	}
 )
 
 func (payload *CreateGroupChat) MapToEntity() *entity.GroupChat {
