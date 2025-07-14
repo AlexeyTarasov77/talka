@@ -181,3 +181,7 @@ func (uc *UseCase) JoinGroupChat(ctx context.Context, userId int, linkUrl string
 	isJoined = true
 	return isJoined, err
 }
+
+func (uc *UseCase) CheckIsLinkAvailable(ctx context.Context, linkUrl string) (isAvailable bool, err error) {
+	return uc.linksRepo.CheckExistsByUrl(ctx, linkUrl)
+}
