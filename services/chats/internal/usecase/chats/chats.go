@@ -16,16 +16,18 @@ type UseCase struct {
 	chatsRepo     gateways.ChatsRepo
 	txManager     gateways.TransactionsManager
 	usersRepo     gateways.UsersRepo
+	messagesRepo  gateways.MessagesRepo
 	linksRepo     gateways.InvitationLinksRepo
 	slugGenerator gateways.SlugGenerator
 }
 
 // New -.
-func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersRepo gateways.UsersRepo, slugGenerator gateways.SlugGenerator, linksRepo gateways.InvitationLinksRepo) *UseCase {
+func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersRepo gateways.UsersRepo, slugGenerator gateways.SlugGenerator, linksRepo gateways.InvitationLinksRepo, messagesRepo gateways.MessagesRepo) *UseCase {
 	return &UseCase{
 		chatsRepo:     chatsRepo,
 		txManager:     txManager,
 		usersRepo:     usersRepo,
+		messagesRepo:  messagesRepo,
 		slugGenerator: slugGenerator,
 		linksRepo:     linksRepo,
 	}
@@ -184,4 +186,20 @@ func (uc *UseCase) JoinGroupChat(ctx context.Context, userId int, linkUrl string
 
 func (uc *UseCase) CheckIsLinkAvailable(ctx context.Context, linkUrl string) (isAvailable bool, err error) {
 	return uc.linksRepo.CheckExistsByUrl(ctx, linkUrl)
+}
+
+func (uc *UseCase) GetChat(ctx context.Context, chatId int) (entity.ChatWithMessages, error) {
+	chat, err := uc.chatsRepo.GetById(ctx, chatId)
+	if err != nil {
+		if errors.Is(err, storage.ErrNotFound) {
+			return nil, ErrChatNotFound
+		}
+		return nil, err
+	}
+	messages, err := uc.messagesRepo.GetByChatId(ctx, chatId)
+	if err != nil {
+		return nil, err
+	}
+	chat.SetMessages(messages)
+	return chat, nil
 }

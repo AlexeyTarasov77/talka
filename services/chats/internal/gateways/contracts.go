@@ -20,6 +20,7 @@ type (
 		CreateJoinReq(ctx context.Context, userId, chatId int) error
 		CountMembersByLink(ctx context.Context, groupId int, linkId int) (int, error)
 		CountJoinRequestsByLink(ctx context.Context, groupId int, linkId int) (int, error)
+		GetById(ctx context.Context, chatId int) (entity.ChatWithMessages, error)
 	}
 	InvitationLinksRepo interface {
 		CheckExistsByUrl(ctx context.Context, url string) (bool, error)
@@ -27,6 +28,9 @@ type (
 	}
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
+	}
+	MessagesRepo interface {
+		GetByChatId(ctx context.Context, chatId int) ([]entity.Message, error)
 	}
 	Transaction interface {
 		Commit(ctx context.Context) error

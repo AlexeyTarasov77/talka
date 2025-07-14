@@ -23,6 +23,7 @@ type (
 		ListChats(ctx context.Context) ([]entity.Chat, error)
 		CreatePersonalChat(ctx context.Context, dto dto.CreatePersonalChat) (*entity.PersonalChat, error)
 		CreateGroupChat(ctx context.Context, dto dto.CreateGroupChat) (*entity.GroupChat, error)
+		GetChat(ctx context.Context, chatId int) (entity.ChatWithMessages, error)
 		UpdateLastMsg(ctx context.Context, msg *entity.Message) error
 		JoinGroupChat(ctx context.Context, userId int, link string) (bool, error)
 		CheckIsLinkAvailable(ctx context.Context, link string) (bool, error)

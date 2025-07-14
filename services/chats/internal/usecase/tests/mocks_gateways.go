@@ -116,6 +116,21 @@ func (mr *MockChatsRepoMockRecorder) GetAll(ctx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockChatsRepo)(nil).GetAll), ctx)
 }
 
+// GetById mocks base method.
+func (m *MockChatsRepo) GetById(ctx context.Context, chatId int) (entity.ChatWithMessages, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetById", ctx, chatId)
+	ret0, _ := ret[0].(entity.ChatWithMessages)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetById indicates an expected call of GetById.
+func (mr *MockChatsRepoMockRecorder) GetById(ctx, chatId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockChatsRepo)(nil).GetById), ctx, chatId)
+}
+
 // GetGroupByLink mocks base method.
 func (m *MockChatsRepo) GetGroupByLink(ctx context.Context, link string) (*entity.GroupChat, error) {
 	m.ctrl.T.Helper()
@@ -251,6 +266,45 @@ func (m *MockUsersRepo) CheckExistsByIds(ctx context.Context, ids []int) (bool, 
 func (mr *MockUsersRepoMockRecorder) CheckExistsByIds(ctx, ids any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByIds", reflect.TypeOf((*MockUsersRepo)(nil).CheckExistsByIds), ctx, ids)
+}
+
+// MockMessagesRepo is a mock of MessagesRepo interface.
+type MockMessagesRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockMessagesRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockMessagesRepoMockRecorder is the mock recorder for MockMessagesRepo.
+type MockMessagesRepoMockRecorder struct {
+	mock *MockMessagesRepo
+}
+
+// NewMockMessagesRepo creates a new mock instance.
+func NewMockMessagesRepo(ctrl *gomock.Controller) *MockMessagesRepo {
+	mock := &MockMessagesRepo{ctrl: ctrl}
+	mock.recorder = &MockMessagesRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockMessagesRepo) EXPECT() *MockMessagesRepoMockRecorder {
+	return m.recorder
+}
+
+// GetByChatId mocks base method.
+func (m *MockMessagesRepo) GetByChatId(ctx context.Context, chatId int) ([]entity.Message, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByChatId", ctx, chatId)
+	ret0, _ := ret[0].([]entity.Message)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByChatId indicates an expected call of GetByChatId.
+func (mr *MockMessagesRepoMockRecorder) GetByChatId(ctx, chatId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByChatId", reflect.TypeOf((*MockMessagesRepo)(nil).GetByChatId), ctx, chatId)
 }
 
 // MockTransaction is a mock of Transaction interface.

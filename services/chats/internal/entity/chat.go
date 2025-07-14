@@ -20,6 +20,11 @@ type (
 		GetLastMsgText() string
 		GetLastMsgDate() time.Time
 	}
+	ChatWithMessages interface {
+		Chat
+		GetMessages() []Message
+		SetMessages([]Message)
+	}
 	BaseChat struct {
 		ID          int
 		Typ         ChatType
@@ -27,6 +32,7 @@ type (
 		ImageURL    string    `json:"image_url"`
 		LastMsgText string    `json:"last_msg_text"`
 		LastMsgDate time.Time `json:"last_msg_date"`
+		Messages    []Message
 	}
 
 	PersonalChat struct {
@@ -79,4 +85,12 @@ func (c *BaseChat) GetLastMsgText() string {
 }
 func (c *BaseChat) GetLastMsgDate() time.Time {
 	return c.LastMsgDate
+}
+
+func (c *BaseChat) GetMessages() []Message {
+	return c.Messages
+}
+
+func (c *BaseChat) SetMessages(messages []Message) {
+	c.Messages = messages
 }
