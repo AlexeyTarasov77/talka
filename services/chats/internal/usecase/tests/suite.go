@@ -12,13 +12,20 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+type TestCase struct {
+	Name     string
+	Mock     func()
+	Expected any
+	Err      error
+}
+
 type useCaseTestSuite struct {
-	chatsUseCase      *chats.UseCase
-	mockChatsRepo     *MockChatsRepo
-	mockLinksRepo     *MockInvitationLinksRepo
-	mockTxManager     *MockTransactionsManager
-	mockUsersRepo     *MockUsersRepo
-	mockSlugGenerator *MockSlugGenerator
+	ChatsUseCase      *chats.UseCase
+	MockChatsRepo     *MockChatsRepo
+	MockLinksRepo     *MockInvitationLinksRepo
+	MockTxManager     *MockTransactionsManager
+	MockUsersRepo     *MockUsersRepo
+	MockSlugGenerator *MockSlugGenerator
 	ctrl              *gomock.Controller
 }
 
@@ -31,21 +38,21 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	mockSlugGenerator := NewMockSlugGenerator(ctrl)
 	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersRepo, mockSlugGenerator, mockLinksRepo)
 	return &useCaseTestSuite{
-		chatsUseCase:      chatsUseCase,
-		mockChatsRepo:     mockChatsRepo,
-		mockTxManager:     mockTxManager,
-		mockUsersRepo:     mockUsersRepo,
-		mockLinksRepo:     mockLinksRepo,
-		mockSlugGenerator: mockSlugGenerator,
+		ChatsUseCase:      chatsUseCase,
+		MockChatsRepo:     mockChatsRepo,
+		MockTxManager:     mockTxManager,
+		MockUsersRepo:     mockUsersRepo,
+		MockLinksRepo:     mockLinksRepo,
+		MockSlugGenerator: mockSlugGenerator,
 		ctrl:              ctrl,
 	}
 }
 
-// setTxExpectations adds expectations on mock transaction manager and returned transaction
+// SetTxExpectations adds expectations on mock transaction manager and returned transaction
 // to ensure they are properly managed
-func setTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpected bool) *MockTransaction {
+func SetTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpected bool) *MockTransaction {
 	mockTx := NewMockTransaction(suite.ctrl)
-	suite.mockTxManager.EXPECT().StartTransaction(ctx).Return(mockTx, nil)
+	suite.MockTxManager.EXPECT().StartTransaction(ctx).Return(mockTx, nil)
 	if commitExpected {
 		commitCall := mockTx.EXPECT().Commit(gomock.Any()).Return(nil)
 		// Rollback is always executed, because it's expected to be used in defer stmt right after starting tx.
@@ -57,7 +64,7 @@ func setTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpec
 	return mockTx
 }
 
-func newTestChat() entity.Chat {
+func NewTestChat() entity.Chat {
 	return &entity.BaseChat{
 		ID:          gofakeit.Number(1, 999999),
 		Typ:         entity.ChatTypes[rand.Intn(len(entity.ChatTypes))],
@@ -68,7 +75,7 @@ func newTestChat() entity.Chat {
 	}
 }
 
-func newTestMsg() *entity.Message {
+func NewTestMsg() *entity.Message {
 	return &entity.Message{
 		ID:        gofakeit.Number(1, 999999),
 		ChatId:    gofakeit.Number(1, 999999),

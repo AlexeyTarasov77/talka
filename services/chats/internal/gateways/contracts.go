@@ -8,7 +8,7 @@ import (
 	"github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 )
 
-//go:generate mockgen -source=contracts.go -destination=../usecase/mocks_gateways_test.go -package=usecase_test
+//go:generate mockgen -source=contracts.go -destination=../usecase/tests/mocks_gateways.go -package=usecase_test
 
 type (
 	ChatsRepo interface {
