@@ -101,6 +101,45 @@ func (mr *MockChatsRepoMockRecorder) UpdateLastMsgInfo(ctx, chatId, msgText, msg
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLastMsgInfo", reflect.TypeOf((*MockChatsRepo)(nil).UpdateLastMsgInfo), ctx, chatId, msgText, msgDate)
 }
 
+// MockInvitationLinksRepo is a mock of InvitationLinksRepo interface.
+type MockInvitationLinksRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockInvitationLinksRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockInvitationLinksRepoMockRecorder is the mock recorder for MockInvitationLinksRepo.
+type MockInvitationLinksRepoMockRecorder struct {
+	mock *MockInvitationLinksRepo
+}
+
+// NewMockInvitationLinksRepo creates a new mock instance.
+func NewMockInvitationLinksRepo(ctrl *gomock.Controller) *MockInvitationLinksRepo {
+	mock := &MockInvitationLinksRepo{ctrl: ctrl}
+	mock.recorder = &MockInvitationLinksRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockInvitationLinksRepo) EXPECT() *MockInvitationLinksRepoMockRecorder {
+	return m.recorder
+}
+
+// CheckExistsByUrl mocks base method.
+func (m *MockInvitationLinksRepo) CheckExistsByUrl(ctx context.Context, url string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckExistsByUrl", ctx, url)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckExistsByUrl indicates an expected call of CheckExistsByUrl.
+func (mr *MockInvitationLinksRepoMockRecorder) CheckExistsByUrl(ctx, url any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckExistsByUrl", reflect.TypeOf((*MockInvitationLinksRepo)(nil).CheckExistsByUrl), ctx, url)
+}
+
 // MockUsersRepo is a mock of UsersRepo interface.
 type MockUsersRepo struct {
 	ctrl     *gomock.Controller

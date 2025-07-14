@@ -15,6 +15,7 @@ import (
 type useCaseTestSuite struct {
 	chatsUseCase      *chats.UseCase
 	mockChatsRepo     *MockChatsRepo
+	mockLinksRepo     *MockInvitationLinksRepo
 	mockTxManager     *MockTransactionsManager
 	mockUsersRepo     *MockUsersRepo
 	mockSlugGenerator *MockSlugGenerator
@@ -26,13 +27,15 @@ func NewUseCaseTestSuite(t *testing.T) *useCaseTestSuite {
 	mockTxManager := NewMockTransactionsManager(ctrl)
 	mockChatsRepo := NewMockChatsRepo(ctrl)
 	mockUsersRepo := NewMockUsersRepo(ctrl)
+	mockLinksRepo := NewMockInvitationLinksRepo(ctrl)
 	mockSlugGenerator := NewMockSlugGenerator(ctrl)
-	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersRepo, mockSlugGenerator)
+	chatsUseCase := chats.New(mockChatsRepo, mockTxManager, mockUsersRepo, mockSlugGenerator, mockLinksRepo)
 	return &useCaseTestSuite{
 		chatsUseCase:      chatsUseCase,
 		mockChatsRepo:     mockChatsRepo,
 		mockTxManager:     mockTxManager,
 		mockUsersRepo:     mockUsersRepo,
+		mockLinksRepo:     mockLinksRepo,
 		mockSlugGenerator: mockSlugGenerator,
 		ctrl:              ctrl,
 	}

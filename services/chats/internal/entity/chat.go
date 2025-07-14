@@ -41,11 +41,11 @@ type (
 		OwnerId     int
 		Name        string
 		Description string // OPTIONAL
-		// Slug is unique field which is used in chat url.
+		// PrimaryLinkUrl is unique field which is used in chat url.
 		// When group is not public - url with this slug serves purpose of invitation link
 		// Value should be automatically generated if not provided explicitly.
-		// Slug can be revoked - in this case new slug should be automatically generated
-		Slug string
+		// PrimaryLinkUrl can be revoked - in this case new slug should be automatically generated
+		PrimaryLinkUrl string
 		// IsPublic indicates whether chat is public and anybody can join it or user can join only by sending request for approval
 		// DEFAULT: false
 		IsPublic bool

@@ -17,6 +17,9 @@ type (
 		UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error
 		AddMembers(ctx context.Context, groupChatId int, membersIds []int) error
 	}
+	InvitationLinksRepo interface {
+		CheckExistsByUrl(ctx context.Context, url string) (bool, error)
+	}
 	UsersRepo interface {
 		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
 	}

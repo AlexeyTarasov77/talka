@@ -16,16 +16,18 @@ type UseCase struct {
 	chatsRepo     gateways.ChatsRepo
 	txManager     gateways.TransactionsManager
 	usersRepo     gateways.UsersRepo
+	linksRepo     gateways.InvitationLinksRepo
 	slugGenerator gateways.SlugGenerator
 }
 
 // New -.
-func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersRepo gateways.UsersRepo, slugGenerator gateways.SlugGenerator) *UseCase {
+func New(chatsRepo gateways.ChatsRepo, txManager gateways.TransactionsManager, usersRepo gateways.UsersRepo, slugGenerator gateways.SlugGenerator, linksRepo gateways.InvitationLinksRepo) *UseCase {
 	return &UseCase{
 		chatsRepo:     chatsRepo,
 		txManager:     txManager,
 		usersRepo:     usersRepo,
 		slugGenerator: slugGenerator,
+		linksRepo:     linksRepo,
 	}
 }
 
@@ -60,12 +62,21 @@ func (uc *UseCase) CreatePersonalChat(ctx context.Context, payload *dto.CreatePe
 
 func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroupChat) (*entity.GroupChat, error) {
 	ent := payload.MapToEntity()
-	if ent.Slug == "" {
-		generatedSlug, err := uc.slugGenerator.GenerateRandomSlug()
-		if err != nil {
-			return nil, err
+	if ent.PrimaryLinkUrl == "" {
+		for {
+			generatedSlug, err := uc.slugGenerator.GenerateRandomSlug()
+			if err != nil {
+				return nil, err
+			}
+			isExists, err := uc.linksRepo.CheckExistsByUrl(ctx, generatedSlug)
+			if err != nil {
+				return nil, err
+			}
+			if !isExists {
+				ent.PrimaryLinkUrl = generatedSlug
+				break
+			}
 		}
-		ent.Slug = generatedSlug
 	}
 	tx, err := uc.txManager.StartTransaction(ctx)
 	if err != nil {
