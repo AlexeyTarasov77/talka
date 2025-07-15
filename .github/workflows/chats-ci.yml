@@ -1,0 +1,13 @@
+name: Chats service CI
+on:
+  push:
+    branches: [main]
+    # paths: 
+    #   services/chats/**/*.go
+    #   !services/chats/docs/**
+
+jobs:
+  reusable_workflow_job:
+    uses: ./.github/workflows/golang-shared.yml
+    with: 
+      workdir: services/chats

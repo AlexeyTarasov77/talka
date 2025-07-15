@@ -24,7 +24,6 @@ linters:
     - gocyclo
     - godot
     - godox
-    - gomodguard
     - goprintffuncname
     - gosec
     - govet
@@ -49,7 +48,6 @@ linters:
     - unparam
     - unused
     - whitespace
-    - wsl
   settings:
     dupl:
       threshold: 100

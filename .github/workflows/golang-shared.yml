@@ -1,10 +1,20 @@
-name: CI
+name: Shared reusable golang workflow
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      workdir:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
 
 jobs:
   golangci-lint:
+    defaults:
+      run:
+        working-directory: ${{ inputs.workdir }}
     name: runner / golangci-lint
     runs-on: ubuntu-latest
     steps:
@@ -13,13 +23,16 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-          cache: false
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
           args: --timeout=15m
+          working-directory: ${{ inputs.workdir }}
 
   unit-tests:
+    defaults:
+      run:
+        working-directory: ${{ inputs.workdir }}
     name: runner / tests / unit
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +41,7 @@ jobs:
         with:
           go-version: 1.24
       - name: Unit Tests
-        run: "make test"
+        run: go test -v ./...
 
   # integration-tests:
   #   name: runner / tests / integration
@@ -37,3 +50,4 @@ jobs:
   #     - uses: actions/checkout@v4
   #     - name: Integration tests
   #       run: "make compose-up-integration-test"
+
