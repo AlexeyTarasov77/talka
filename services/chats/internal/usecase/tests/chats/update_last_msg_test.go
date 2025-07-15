@@ -19,20 +19,20 @@ func TestUpdateLastMsg(t *testing.T) {
 		{
 			Name: "success",
 			Mock: func() {
-				suite.MockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt)
+				suite.MockChatsRepo.EXPECT().Update(ctx, expectedMsg.ChatId, map[string]any{"last_msg": expectedMsg})
 			},
 		},
 		{
 			Name: "update error (unhandled)",
 			Mock: func() {
-				suite.MockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt).Return(fakeErr)
+				suite.MockChatsRepo.EXPECT().Update(ctx, expectedMsg.ChatId, map[string]any{"last_msg": expectedMsg}).Return(fakeErr)
 			},
 			Err: fakeErr,
 		},
 		{
 			Name: "update error (not found)",
 			Mock: func() {
-				suite.MockChatsRepo.EXPECT().UpdateLastMsgInfo(ctx, expectedMsg.ChatId, expectedMsg.Text, expectedMsg.CreatedAt).Return(storage.ErrNotFound)
+				suite.MockChatsRepo.EXPECT().Update(ctx, expectedMsg.ChatId, map[string]any{"last_msg": expectedMsg}).Return(storage.ErrNotFound)
 			},
 			Err: chats.ErrChatNotFound,
 		},

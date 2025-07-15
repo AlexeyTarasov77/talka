@@ -17,8 +17,7 @@ type (
 		GetTyp() ChatType
 		GetCreatedAt() time.Time
 		GetImageURL() string
-		GetLastMsgText() string
-		GetLastMsgDate() time.Time
+		GetLastMsg() *Message
 	}
 	ChatWithMessages interface {
 		Chat
@@ -26,13 +25,14 @@ type (
 		SetMessages([]Message)
 	}
 	BaseChat struct {
-		ID          int
-		Typ         ChatType
-		CreatedAt   time.Time `json:"created_at"`
-		ImageURL    string    `json:"image_url"`
-		LastMsgText string    `json:"last_msg_text"`
-		LastMsgDate time.Time `json:"last_msg_date"`
-		Messages    []Message
+		ID        int
+		Typ       ChatType
+		CreatedAt time.Time `json:"created_at"`
+		ImageURL  string    `json:"image_url"`
+		// LastMsg should be kept always up to date
+		LastMsg *Message
+		// Messages are retrieved only in special cases
+		Messages []Message
 	}
 
 	PersonalChat struct {
@@ -80,11 +80,8 @@ func (c *BaseChat) GetImageURL() string {
 	return c.ImageURL
 }
 
-func (c *BaseChat) GetLastMsgText() string {
-	return c.LastMsgText
-}
-func (c *BaseChat) GetLastMsgDate() time.Time {
-	return c.LastMsgDate
+func (c *BaseChat) GetLastMsg() *Message {
+	return c.LastMsg
 }
 
 func (c *BaseChat) GetMessages() []Message {

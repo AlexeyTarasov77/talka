@@ -110,7 +110,7 @@ func (uc *UseCase) CreateGroupChat(ctx context.Context, payload *dto.CreateGroup
 }
 
 func (uc *UseCase) UpdateLastMsg(ctx context.Context, msg *entity.Message) error {
-	err := uc.chatsRepo.UpdateLastMsgInfo(ctx, msg.ChatId, msg.Text, msg.CreatedAt)
+	err := uc.chatsRepo.Update(ctx, msg.ChatId, map[string]any{"last_msg": msg})
 	if err != nil {
 		if errors.Is(err, storage.ErrNotFound) {
 			return ErrChatNotFound

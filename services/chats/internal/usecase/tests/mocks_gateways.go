@@ -12,7 +12,6 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
-	time "time"
 
 	entity "github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 	gateways "github.com/AlexeyTarasov77/messanger.chats/internal/gateways"
@@ -161,18 +160,18 @@ func (mr *MockChatsRepoMockRecorder) Save(ctx, chat any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockChatsRepo)(nil).Save), ctx, chat)
 }
 
-// UpdateLastMsgInfo mocks base method.
-func (m *MockChatsRepo) UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error {
+// Update mocks base method.
+func (m *MockChatsRepo) Update(ctx context.Context, chatId int, values map[string]any) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateLastMsgInfo", ctx, chatId, msgText, msgDate)
+	ret := m.ctrl.Call(m, "Update", ctx, chatId, values)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UpdateLastMsgInfo indicates an expected call of UpdateLastMsgInfo.
-func (mr *MockChatsRepoMockRecorder) UpdateLastMsgInfo(ctx, chatId, msgText, msgDate any) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockChatsRepoMockRecorder) Update(ctx, chatId, values any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLastMsgInfo", reflect.TypeOf((*MockChatsRepo)(nil).UpdateLastMsgInfo), ctx, chatId, msgText, msgDate)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockChatsRepo)(nil).Update), ctx, chatId, values)
 }
 
 // MockInvitationLinksRepo is a mock of InvitationLinksRepo interface.

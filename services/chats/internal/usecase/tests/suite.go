@@ -69,12 +69,11 @@ func SetTxExpectations(ctx context.Context, suite *useCaseTestSuite, commitExpec
 
 func NewTestChat() entity.Chat {
 	return &entity.BaseChat{
-		ID:          gofakeit.Number(1, 999999),
-		Typ:         entity.ChatTypes[rand.Intn(len(entity.ChatTypes))],
-		CreatedAt:   gofakeit.DateRange(time.Now().AddDate(-1, 0, 0), time.Now()),
-		ImageURL:    gofakeit.ImageURL(200, 200),
-		LastMsgText: gofakeit.Sentence(gofakeit.Number(3, 15)),
-		LastMsgDate: gofakeit.DateRange(time.Now().AddDate(0, 0, -30), time.Now()),
+		ID:        gofakeit.Number(1, 999999),
+		Typ:       entity.ChatTypes[rand.Intn(len(entity.ChatTypes))],
+		CreatedAt: gofakeit.DateRange(time.Now().AddDate(-1, 0, 0), time.Now()),
+		ImageURL:  gofakeit.ImageURL(200, 200),
+		LastMsg:   NewTestMsg(),
 	}
 }
 

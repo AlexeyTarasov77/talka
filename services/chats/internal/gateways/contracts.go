@@ -3,7 +3,6 @@ package gateways
 
 import (
 	"context"
-	"time"
 
 	"github.com/AlexeyTarasov77/messanger.chats/internal/entity"
 )
@@ -14,7 +13,7 @@ type (
 	ChatsRepo interface {
 		GetAll(ctx context.Context) ([]entity.Chat, error)
 		Save(ctx context.Context, chat entity.Chat) (entity.Chat, error)
-		UpdateLastMsgInfo(ctx context.Context, chatId int, msgText string, msgDate time.Time) error
+		Update(ctx context.Context, chatId int, values map[string]any) error
 		AddMembers(ctx context.Context, groupChatId int, membersIds []int) error
 		GetGroupByLink(ctx context.Context, link string) (*entity.GroupChat, error)
 		CreateJoinReq(ctx context.Context, userId, chatId int) error
