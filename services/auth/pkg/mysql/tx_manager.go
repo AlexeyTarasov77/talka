@@ -11,9 +11,9 @@ type mySQLTransactionManager struct {
 	db *sql.DB
 }
 
-func NewTransactionManager(db *sql.DB) *mySQLTransactionManager {
+func NewTransactionManager(m *MySQL) *mySQLTransactionManager {
 	return &mySQLTransactionManager{
-		db: db,
+		db: m.DB,
 	}
 }
 

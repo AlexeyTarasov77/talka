@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -17,7 +18,7 @@ type MySQL struct {
 	maxPoolSize  int
 	connAttempts int
 	connTimeout  time.Duration
-	db           *sql.DB
+	DB           *sql.DB
 }
 
 func New(url string, options ...Option) (*MySQL, error) {
@@ -28,7 +29,7 @@ func New(url string, options ...Option) (*MySQL, error) {
 	mysql := &MySQL{
 		maxPoolSize: _defaultMaxPoolSize,
 		connTimeout: _defaultConnTimeout,
-		db:          db,
+		DB:          db,
 	}
 	for _, opt := range options {
 		opt(mysql)
@@ -38,4 +39,21 @@ func New(url string, options ...Option) (*MySQL, error) {
 	db.SetMaxIdleConns(mysql.maxPoolSize)
 
 	return mysql, nil
+}
+
+func (m *MySQL) Close() {
+	if m.DB != nil {
+		m.DB.Close()
+	}
+}
+
+type QueryableTransaction interface {
+	ExecContext(context.Context, string, ...any) (sql.Result, error)
+	PrepareContext(context.Context, string) (*sql.Stmt, error)
+	QueryContext(context.Context, string, ...any) (*sql.Rows, error)
+	QueryRowContext(context.Context, string, ...any) *sql.Row
+}
+
+func (m *MySQL) Begin() (QueryableTransaction, error) {
+	return m.DB.Begin()
 }
