@@ -272,32 +272,32 @@ func (m *MockSessionManager) EXPECT() *MockSessionManagerMockRecorder {
 }
 
 // GetSessionData mocks base method.
-func (m *MockSessionManager) GetSessionData() (map[string]any, error) {
+func (m *MockSessionManager) GetSessionData(ctx context.Context) (map[string]any, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSessionData")
+	ret := m.ctrl.Call(m, "GetSessionData", ctx)
 	ret0, _ := ret[0].(map[string]any)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSessionData indicates an expected call of GetSessionData.
-func (mr *MockSessionManagerMockRecorder) GetSessionData() *gomock.Call {
+func (mr *MockSessionManagerMockRecorder) GetSessionData(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSessionData", reflect.TypeOf((*MockSessionManager)(nil).GetSessionData))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSessionData", reflect.TypeOf((*MockSessionManager)(nil).GetSessionData), ctx)
 }
 
 // SetToSession mocks base method.
-func (m *MockSessionManager) SetToSession(key, value string) error {
+func (m *MockSessionManager) SetToSession(ctx context.Context, key, value string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetToSession", key, value)
+	ret := m.ctrl.Call(m, "SetToSession", ctx, key, value)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetToSession indicates an expected call of SetToSession.
-func (mr *MockSessionManagerMockRecorder) SetToSession(key, value any) *gomock.Call {
+func (mr *MockSessionManagerMockRecorder) SetToSession(ctx, key, value any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetToSession", reflect.TypeOf((*MockSessionManager)(nil).SetToSession), key, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetToSession", reflect.TypeOf((*MockSessionManager)(nil).SetToSession), ctx, key, value)
 }
 
 // MockSessionManagerFactory is a mock of SessionManagerFactory interface.

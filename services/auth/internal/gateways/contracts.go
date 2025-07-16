@@ -29,8 +29,8 @@ type (
 		FetchUserData(ctx context.Context, accessToken string) (*entity.User, error)
 	}
 	SessionManager interface {
-		GetSessionData() (map[string]any, error)
-		SetToSession(key, value string) error
+		GetSessionData(ctx context.Context) (map[string]any, error)
+		SetToSession(ctx context.Context, key, value string) error
 	}
 	SessionManagerFactory interface {
 		CreateSessionManager(sessionId string) SessionManager

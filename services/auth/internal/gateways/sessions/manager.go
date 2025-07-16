@@ -1,14 +1,15 @@
 package sessions
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 )
 
 //go:generate mockgen -source=manager.go -destination=./mocks_test.go -package=sessions_test
 type Storage interface {
-	Get(key string) (string, error)
-	Set(key, value string) error
+	Get(ctx context.Context, key string) (string, error)
+	Set(ctx context.Context, key, value string) error
 }
 
 type Manager struct {
@@ -27,8 +28,8 @@ func (m *Manager) StorageKey() string {
 	return fmt.Sprintf("sessions:%s", m.sessionId)
 }
 
-func (m *Manager) GetSessionData() (map[string]any, error) {
-	rawData, err := m.storage.Get(m.StorageKey())
+func (m *Manager) GetSessionData(ctx context.Context) (map[string]any, error) {
+	rawData, err := m.storage.Get(ctx, m.StorageKey())
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve session data: %w", err)
 	}
@@ -39,8 +40,8 @@ func (m *Manager) GetSessionData() (map[string]any, error) {
 	return res, nil
 }
 
-func (m *Manager) SetToSession(key, value string) error {
-	jsonData, err := m.storage.Get(m.StorageKey())
+func (m *Manager) SetToSession(ctx context.Context, key, value string) error {
+	jsonData, err := m.storage.Get(ctx, m.StorageKey())
 	if err != nil {
 		return fmt.Errorf("failed to retrieve session data: %w", err)
 	}
@@ -53,7 +54,7 @@ func (m *Manager) SetToSession(key, value string) error {
 	if err != nil {
 		return fmt.Errorf("failed to serialize updated session data: %w", err)
 	}
-	if err := m.storage.Set(m.StorageKey(), string(updatedJsonData)); err != nil {
+	if err := m.storage.Set(ctx, m.StorageKey(), string(updatedJsonData)); err != nil {
 		return fmt.Errorf("failed to set updated session data: %w", err)
 	}
 	return nil

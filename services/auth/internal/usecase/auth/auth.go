@@ -57,7 +57,7 @@ func (uc *UseCase) SignInOAuthBegin(ctx context.Context, provider gateways.OAuth
 	stateToken := uc.securityProvider.GenerateSecureUrlSafeToken()
 	authURL := provider.GetAuthURL(stateToken)
 	sessionManager := uc.sessionManagerFactory.CreateSessionManager(sessionId)
-	if err := sessionManager.SetToSession(uc.OAuthStateTokenKey, stateToken); err != nil {
+	if err := sessionManager.SetToSession(ctx, uc.OAuthStateTokenKey, stateToken); err != nil {
 		return "", err
 	}
 	return authURL, nil
@@ -66,7 +66,7 @@ func (uc *UseCase) SignInOAuthBegin(ctx context.Context, provider gateways.OAuth
 func (uc *UseCase) SignInOAuthComplete(ctx context.Context, stateToken string, authCode string, provider gateways.OAuthProvider, sessionId string) (*AuthInfo, error) {
 	var signedUp bool
 	sessionManager := uc.sessionManagerFactory.CreateSessionManager(sessionId)
-	sessionData, err := sessionManager.GetSessionData()
+	sessionData, err := sessionManager.GetSessionData(ctx)
 	if err != nil {
 		return nil, err
 	}

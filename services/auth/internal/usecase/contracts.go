@@ -5,6 +5,8 @@ import (
 	"context"
 
 	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways"
+	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
 )
 
 type txCtxKeyType string
@@ -19,7 +21,8 @@ func SetTransaction(ctx context.Context, tx any) context.Context {
 
 type (
 	Auth interface {
-		SignIn(ctx context.Context) (*entity.User, error)
 		GetOAuthProviders(ctx context.Context) []entity.OAuthProviderInfo
+		SignInOAuthBegin(ctx context.Context, provider gateways.OAuthProvider, sessionId string) (string, error)
+		SignInOAuthComplete(ctx context.Context, stateToken string, authCode string, provider gateways.OAuthProvider, sessionId string) (*auth.AuthInfo, error)
 	}
 )

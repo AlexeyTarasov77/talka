@@ -44,7 +44,7 @@ func TestSignInOAuthBegin(t *testing.T) {
 		suite.mockSecurityProvider.EXPECT().GenerateSecureUrlSafeToken().Return(expectedOAuthStateToken),
 		suite.mockOAuthProvider.EXPECT().GetAuthURL(expectedOAuthStateToken).Return(expectedAuthURL),
 		suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-		suite.mockSessionManager.EXPECT().SetToSession(suite.authUseCase.OAuthStateTokenKey, expectedOAuthStateToken),
+		suite.mockSessionManager.EXPECT().SetToSession(ctx, suite.authUseCase.OAuthStateTokenKey, expectedOAuthStateToken),
 	)
 
 	authURL, err := suite.authUseCase.SignInOAuthBegin(ctx, suite.mockOAuthProvider, sessionId)
@@ -69,7 +69,7 @@ func TestSignInOAuthComplete(t *testing.T) {
 			mock: func() {
 				gomock.InOrder(
 					suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-					suite.mockSessionManager.EXPECT().GetSessionData().
+					suite.mockSessionManager.EXPECT().GetSessionData(ctx).
 						Return(map[string]any{suite.authUseCase.OAuthStateTokenKey: expectedOAuthStateToken}, nil),
 					suite.mockOAuthProvider.EXPECT().GetAccessToken(ctx, fakeAuthCode).Return(expectedOAuthAccessToken, nil),
 					suite.mockOAuthProvider.EXPECT().FetchUserData(ctx, expectedOAuthAccessToken).Return(oauthProvidedUserData, nil),
@@ -85,7 +85,7 @@ func TestSignInOAuthComplete(t *testing.T) {
 			mock: func() {
 				gomock.InOrder(
 					suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-					suite.mockSessionManager.EXPECT().GetSessionData().
+					suite.mockSessionManager.EXPECT().GetSessionData(ctx).
 						Return(map[string]any{suite.authUseCase.OAuthStateTokenKey: expectedOAuthStateToken}, nil),
 					suite.mockOAuthProvider.EXPECT().GetAccessToken(ctx, fakeAuthCode).Return(expectedOAuthAccessToken, nil),
 					suite.mockOAuthProvider.EXPECT().FetchUserData(ctx, expectedOAuthAccessToken).Return(oauthProvidedUserData, nil),
@@ -102,7 +102,7 @@ func TestSignInOAuthComplete(t *testing.T) {
 			mock: func() {
 				gomock.InOrder(
 					suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-					suite.mockSessionManager.EXPECT().GetSessionData().
+					suite.mockSessionManager.EXPECT().GetSessionData(ctx).
 						Return(map[string]any{suite.authUseCase.OAuthStateTokenKey: "unexpected"}, nil),
 				)
 			},
@@ -114,7 +114,7 @@ func TestSignInOAuthComplete(t *testing.T) {
 			mock: func() {
 				gomock.InOrder(
 					suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-					suite.mockSessionManager.EXPECT().GetSessionData().
+					suite.mockSessionManager.EXPECT().GetSessionData(ctx).
 						Return(map[string]any{}, nil),
 				)
 			},
@@ -126,7 +126,7 @@ func TestSignInOAuthComplete(t *testing.T) {
 			mock: func() {
 				gomock.InOrder(
 					suite.mockSessionManagerFactory.EXPECT().CreateSessionManager(sessionId).Return(suite.mockSessionManager),
-					suite.mockSessionManager.EXPECT().GetSessionData().
+					suite.mockSessionManager.EXPECT().GetSessionData(ctx).
 						Return(nil, fakeErr),
 				)
 			},
