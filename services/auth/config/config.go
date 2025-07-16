@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -20,11 +21,12 @@ type (
 		App     App
 		HTTP    HTTP
 		Log     Log
-		OAuth   OAuth
+		Auth    Auth
 		DB      Database
 		RMQ     RMQ
 		Metrics Metrics
 		Swagger Swagger
+		Redis   Redis
 	}
 
 	// App -.
@@ -43,16 +45,24 @@ type (
 		Level string `env:"LOG_LEVEL,required"`
 	}
 
-	// OAuth -.
-	OAuth struct {
-		ClientID     string `env:"OAUTH_CLIENT_ID,required"`
-		ClientSecret string `env:"OAUTH_CLIENT_SECRET,required"`
+	// Auth -.
+	Auth struct {
+		OAuthClientID     string `env:"OAUTH_CLIENT_ID,required"`
+		OAuthClientSecret string `env:"OAUTH_CLIENT_SECRET,required"`
+
+		TokenTTL    time.Duration `env:"AUTH_TOKEN_TTL,required"`
+		TokenSecret string        `env:"AUTH_TOKEN_SECRET,required"`
+		TokenAlg    string        `env:"AUTH_TOKEN_ALG"`
 	}
 
 	// Database -.
 	Database struct {
 		PoolMax int    `env:"DB_POOL_MAX" env-default:"10"`
 		URL     string `env:"DB_URL,required"`
+	}
+
+	Redis struct {
+		URL string `env:"REDIS_URL,required"`
 	}
 
 	// RMQ -.

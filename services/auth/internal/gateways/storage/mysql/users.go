@@ -1,9 +1,15 @@
 package repo
 
 import (
-	"github.com/AlexeyTarasov77/messanger.users/pkg/mysql"
+	"context"
+
+	"github.com/AlexeyTarasov77/messanger.users/internal/entity"
 )
 
 type Users struct {
-	db *mysql.MySQL
+	Base
+}
+
+func (u *Users) GetByOAuthAccId(ctx context.Context, oauthAccID string) (*entity.User, error) {
+	return nil, nil
 }

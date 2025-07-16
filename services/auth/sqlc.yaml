@@ -1,0 +1,9 @@
+version: "2"
+sql:
+  - engine: "mysql"
+    schema: "./internal/gateways/storage/mysql/sql/schema.sql"
+    queries: "./internal/gateways/storage/mysql/sql/queries.sql"
+    gen:
+      go:
+        out: "./internal/gateways/storage/mysql/sql/generated"
+

@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,8 +12,17 @@ type TokenProvider struct {
 	SigningAlg string
 }
 
-func NewTokenProvider(signingKey string, signingAlg string) *TokenProvider {
-	return &TokenProvider{signingKey, signingAlg}
+const _defaultSigningAlg = "HS265"
+
+// NewTokenProvider returns new provider for creating token and error if invalid signingAlg is provided.
+// signingAlg can be empty in which case the default is used
+func NewTokenProvider(signingKey string, signingAlg string) (*TokenProvider, error) {
+	if signingAlg == "" {
+		signingAlg = _defaultSigningAlg
+	} else if jwt.GetSigningMethod(signingAlg) == nil {
+		return nil, fmt.Errorf("'%s' signing algorithm is not available", signingAlg)
+	}
+	return &TokenProvider{signingKey, signingAlg}, nil
 }
 
 func (tp *TokenProvider) NewToken(expires time.Duration, claims map[string]any) (string, error) {

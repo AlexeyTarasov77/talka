@@ -2,6 +2,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -9,11 +10,15 @@ import (
 
 	"github.com/AlexeyTarasov77/messanger.users/config"
 	"github.com/AlexeyTarasov77/messanger.users/internal/controller/http"
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways/security"
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways/sessions"
 	repo "github.com/AlexeyTarasov77/messanger.users/internal/gateways/storage/mysql"
+	"github.com/AlexeyTarasov77/messanger.users/internal/gateways/storage/redis"
 	"github.com/AlexeyTarasov77/messanger.users/internal/usecase/auth"
 	"github.com/AlexeyTarasov77/messanger.users/pkg/httpserver"
+	"github.com/AlexeyTarasov77/messanger.users/pkg/jwt"
 	"github.com/AlexeyTarasov77/messanger.users/pkg/logger"
-	"github.com/AlexeyTarasov77/messanger.users/pkg/postgres"
+	"github.com/AlexeyTarasov77/messanger.users/pkg/mysql"
 )
 
 // Run creates objects via constructors.
@@ -21,20 +26,35 @@ func Run(cfg *config.Config) {
 	l := logger.New(cfg.Log.Level)
 
 	// Repository
-	pg, err := postgres.New(cfg.DB.URL, postgres.MaxPoolSize(cfg.DB.PoolMax))
+	db, err := mysql.New(cfg.DB.URL, mysql.MaxPoolSize(cfg.DB.PoolMax))
 	if err != nil {
-		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
+		l.Fatal(fmt.Errorf("app - Run - mysql.New: %w", err))
 	}
-	defer pg.Close()
-
-	repositories := repo.NewRepositorories(pg)
-
+	defer db.Close()
+	rdb, err := redis_adapter.New(cfg.Redis.URL)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - redis_adapter.New: %w", err))
+	}
+	defer rdb.Close(context.Background())
+	repositories := repo.NewRepositorories(db)
+	sessionManagerFactory := sessions.NewManagerFactory(rdb)
+	jwtProvider, err := jwt.NewTokenProvider(cfg.Auth.TokenSecret, cfg.Auth.TokenAlg)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - jwt.NewTokenProvider: %w", err))
+	}
 	// Use-Case
-	chatsUseCase := chats.New(repositories.Chats)
+	authUseCase := auth.New(
+		mysql.NewTransactionManager(db),
+		repositories.Users,
+		sessionManagerFactory,
+		security.New(),
+		jwtProvider,
+		cfg.Auth.TokenTTL,
+	)
 
 	// HTTP Server
-	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
-	http.NewRouter(httpServer.App, cfg, chatsUseCase, l)
+	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port))
+	http.NewRouter(httpServer.App, cfg, authUseCase, l)
 
 	// Start servers
 	httpServer.Start()

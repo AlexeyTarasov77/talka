@@ -12,7 +12,6 @@ import (
 
 type (
 	UsersRepo interface {
-		CheckExistsByIds(ctx context.Context, ids []int) (bool, error)
 		Insert(ctx context.Context, user *entity.User) (*entity.User, error)
 		GetByOAuthAccId(ctx context.Context, accId string) (*entity.User, error)
 	}
