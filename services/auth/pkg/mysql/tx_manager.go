@@ -42,8 +42,8 @@ func (tx mySQLTx) Rollback(ctx context.Context) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
-	case <-rollbackErr:
-		return <-rollbackErr
+	case err := <-rollbackErr:
+		return err
 	}
 }
 

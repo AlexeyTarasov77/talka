@@ -4,8 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -22,10 +25,19 @@ type MySQL struct {
 }
 
 func New(url string, options ...Option) (*MySQL, error) {
-	db, err := sql.Open("mysql", url)
+	// normalize url to mysql-compatible format
+	url = strings.TrimPrefix(url, "mysql://")
+	addrRegex := regexp.MustCompile(`@(\w+:\d+)`)
+	url = addrRegex.ReplaceAllString(url, "@tcp($1)")
+	cfg, err := mysql.ParseDSN(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed opening mysql db connection: %w", err)
+		return nil, fmt.Errorf("failed to parse mysql dsn: %w", err)
 	}
+	connector, err := mysql.NewConnector(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed creating mysql connector: %w", err)
+	}
+	db := sql.OpenDB(connector)
 	mysql := &MySQL{
 		maxPoolSize: _defaultMaxPoolSize,
 		connTimeout: _defaultConnTimeout,
