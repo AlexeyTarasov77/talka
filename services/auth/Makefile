@@ -1,11 +1,10 @@
-ifneq ($(wildcard .env),)
-include .env
-export
-else
-$(warning WARNING: .env file not found! Using .env.example)
-include .env.example
-export
+ifeq ($(MODE),)
+$(warning WARNING: MODE is not set! Using local by default)
+MODE=local
 endif
+
+include .$(MODE).env
+export
 
 LOCAL_BIN:=$(CURDIR)/bin
 BASE_STACK = docker compose -f docker-compose.yml
@@ -19,6 +18,10 @@ ALL_STACK = $(INTEGRATION_TEST_STACK)
 
 help: ## Display this help screen
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+migrate:
+	atlas schema apply -u "$(DB_URL)" --to 'file://internal/gateways/storage/mysql/sql/schema.sql' \
+		--dev-url "docker://mysql/8/schema"
 
 compose-up: ### Run docker compose (without backend and reverse proxy)
 	$(BASE_STACK) up --build -d db rabbitmq && docker compose logs -f
@@ -39,14 +42,6 @@ compose-down: ### Down docker compose
 swag-v1: ### swag init
 	swag init -g internal/controller/http/router.go
 .PHONY: swag-v1
-
-proto-v1: ### generate source files from proto
-	protoc --go_out=. \
-		--go_opt=paths=source_relative \
-		--go-grpc_out=. \
-		--go-grpc_opt=paths=source_relative \
-		docs/proto/v1/*.proto
-.PHONY: proto-v1
 
 deps: ### deps tidy + verify
 	go mod tidy && go mod verify
